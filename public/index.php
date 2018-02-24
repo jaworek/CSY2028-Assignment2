@@ -1,39 +1,33 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<link rel="stylesheet" href="/styles.css"/>
-		<title>Claires's Cars - Home</title>
-	</head>
-	<body>
-	<header>
-		<section>
-			<aside>
-				<h3>Opening Hours:</h3>
-				<p>Mon-Fri: 09:00-17:30</p>
-				<p>Sat: 09:00-17:00</p>
-				<p>Sun: 10:00-16:00</p>
-			</aside>
-			<img src="/images/logo.png"/>
+<?php
+require '../functions/connectDb.php';
+require '../functions/loadtemplate.php';
+require '../classes/databasetable.php';
+require '../classes/pagecontroller.php';
 
-		</section>
-	</header>
-	<nav>
-		<ul>
-			<li><a href="/">Home</a></li>
-			<li><a href="/cars.php">Showroom</a></li>
-			<li><a href="/about.html">About Us</a></li>
-			<li><a href="/contact.php">Contact us</a></li>
-		</ul>
+// database connection
+$pdo = connectDatabase();
 
-	</nav>
-<img src="images/randombanner.php"/>
-	<main class="home">
-		<p>Welcome to Claire's Cars, Northampton's specialist in classic and import cars.</p>
-	</main>
+// tables
+$carsTable = new DatabaseTable($pdo, 'cars', 'id');
+$manufacturersTable = new DatabaseTable($pdo, 'manufacturers', 'id');
 
+// controllers
+$pageController = new PageController();
 
-	<footer>
-		&copy; Claire's Cars 2018
-	</footer>
-</body>
-</html>
+$route = ltrim(explode('?', $_SERVER['REQUEST_URI'])[0], '/');
+if (empty($route)) {
+    $page = $pageController->home();
+} else if ($route == 'page/cars') {
+    $page = $pageController->cars();
+} else if ($route == 'page/about') {
+    $page = $pageController->about();
+} else if ($route == 'page/contact') {
+    $page = $pageController->contact();
+} else {
+    $page = $pageController->home();
+}
+
+$output = loadTemplate('../templates/' . $page['template'], $page['variables']);
+$title = $page['title'];
+
+require '../templates/layout.html.php';

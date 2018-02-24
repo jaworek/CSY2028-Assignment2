@@ -20,15 +20,14 @@
 	<nav>
 		<ul>
 			<li><a href="/">Home</a></li>
-			<li><a href="/cars.php">Showroom</a></li>
-			<li><a href="/about.html">About Us</a></li>
-			<li><a href="/contact.php">Contact us</a></li>
+			<li><a href="/page/cars">Showroom</a></li>
+			<li><a href="/page/about">About Us</a></li>
+			<li><a href="/page/contact">Contact us</a></li>
 		</ul>
-
 	</nav>
 <img src="images/randombanner.php"/>
 	<main class="home">
-		<p>Welcome to Claire's Cars, Northampton's specialist in classic and import cars.</p>
+        <?= $output ?>
 	</main>
 
 
