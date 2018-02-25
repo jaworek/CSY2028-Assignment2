@@ -10,17 +10,8 @@ class PageController
     public function home()
     {
         return [
-            'template' => 'home.html.php',
+            'template' => 'page/home.html.php',
             'title' => 'Home',
-            'variables' => []
-        ];
-    }
-
-    public function cars()
-    {
-        return [
-            'template' => 'cars.html.php',
-            'title' => 'Our Cars',
             'variables' => []
         ];
     }
@@ -28,7 +19,7 @@ class PageController
     public function about()
     {
         return [
-            'template' => 'about.html.php',
+            'template' => 'page/about.html.php',
             'title' => 'About us',
             'variables' => []
         ];
@@ -37,8 +28,17 @@ class PageController
     public function contact()
     {
         return [
-            'template' => 'contact.html.php',
+            'template' => 'page/contact.html.php',
             'title' => 'Contact us',
+            'variables' => []
+        ];
+    }
+
+    public function careers()
+    {
+        return [
+            'template' => 'page/careers.html.php',
+            'title' => 'Claire’s Careers',
             'variables' => []
         ];
     }
