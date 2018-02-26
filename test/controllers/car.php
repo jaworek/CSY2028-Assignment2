@@ -1,6 +1,7 @@
 <?php
 
-class CarController
+namespace Test\Controllers;
+class Car
 {
     private $carsTable;
     private $manufacturersTable;
@@ -14,7 +15,7 @@ class CarController
     public function showroom($manufacturerId)
     {
         if (empty($manufacturerId)) {
-            $cars = $this->carsTable->findAll();
+            $cars = $this->carsTable->find('archived', 'false');
         } else {
             $cars = $this->carsTable->find('manufacturerId', $manufacturerId);
         }

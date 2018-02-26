@@ -1,4 +1,8 @@
 <?php
+
+namespace Classes;
+use Exception;
+
 class DatabaseTable
 {
     private $pdo;

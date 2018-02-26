@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel="stylesheet" href="/styles.css"/>
+		<link rel="stylesheet" href="/css/styles.min.css"/>
 		<title>Claires's Cars - <?= $title ?></title>
 	</head>
 	<body>

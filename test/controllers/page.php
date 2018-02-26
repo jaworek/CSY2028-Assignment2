@@ -1,12 +1,8 @@
 <?php
 
-class PageController
+namespace Test\Controllers;
+class Page
 {
-    public function __construct()
-    {
-
-    }
-
     public function home()
     {
         return [
