@@ -17,6 +17,8 @@ class Routes
         $carsTable = new DatabaseTable($pdo, 'cars', 'id');
         $manufacturersTable = new DatabaseTable($pdo, 'manufacturers', 'id');
         $inquiresTable = new DatabaseTable($pdo, 'inquiries', 'id');
+        $adminsTable = new DatabaseTable($pdo, 'admins', 'id');
+        $newsTable = new DatabaseTable($pdo, 'news', 'id');
 
         // controllers
         $pageController = new Page($inquiresTable);

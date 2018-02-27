@@ -16,7 +16,6 @@
         <input type="text" name="price" value="<?= $car['price']; ?>"/>
 
         <label>Category</label>
-
         <select name="manufacturerId">
             <?php foreach ($manufacturers as $manufacturer) {
                 if ($car['categoryId'] == $manufacturer['id']) { ?>
@@ -27,8 +26,10 @@
             } ?>
         </select>
 
-        <?php if (file_exists('../productimages/' . $car['id'] . '.jpg')) { ?>
-            <img src="../productimages/' . $car['id'] . '.jpg"/>
+        <!--    Wrong pathway specified (fixed, add note in documentation)   -->
+        <?php if (file_exists('images/cars/' . $car['id'] . '.jpg')) { ?>
+            <label>Current image</label>
+            <img src="../images/cars/<?= $car['id'] ?>.jpg"/>
         <?php } ?>
 
         <label>Product image</label>

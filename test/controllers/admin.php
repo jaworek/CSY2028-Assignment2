@@ -281,6 +281,8 @@ class Admin
 
     public function addStaff()
     {
+        $this->isLogged();
+
         return [
             'template' => 'admin/addstaff.html.php',
             'title' => 'Admin',
@@ -291,6 +293,8 @@ class Admin
 
     public function addNews()
     {
+        $this->isLogged();
+
         return [
             'template' => 'admin/addnews.html.php',
             'title' => 'Admin',
