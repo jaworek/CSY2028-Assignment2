@@ -16,9 +16,10 @@ class Routes
         // tables
         $carsTable = new DatabaseTable($pdo, 'cars', 'id');
         $manufacturersTable = new DatabaseTable($pdo, 'manufacturers', 'id');
+        $inquiresTable = new DatabaseTable($pdo, 'inquiries', 'id');
 
         // controllers
-        $pageController = new Page();
+        $pageController = new Page($inquiresTable);
         $adminController = new Admin($carsTable, $manufacturersTable);
         $carController = new Car($carsTable, $manufacturersTable);
 
@@ -58,6 +59,10 @@ class Routes
             $page = $adminController->deleteCar();
         } else if ($route == 'admin/deletemanufacturer') {
             $page = $adminController->deleteManufacturer();
+        } else if ($route == 'admin/addstaff') {
+            $page = $adminController->addStaff();
+        } else if ($route == 'admin/addnews') {
+            $page = $adminController->addNews();
         } else {
             $page = $pageController->home();
         }

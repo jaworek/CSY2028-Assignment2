@@ -13,6 +13,7 @@
             <th style="width: 10%">Archived</th>
             <th style="width: 5%">&nbsp;</th>
             <th style="width: 5%">&nbsp;</th>
+            <th style="width: 5%">&nbsp;</th>
         </tr>
 
 
@@ -21,9 +22,9 @@
                 <td><?= $car['name'] ?></td>
                 <td>£<?= $car['price'] ?></td>
                 <td><?= ($car['archived'] == 'false') ? 'False' : 'True'; ?></td>
-                <td><a href="/admin/archive?id=<?= $car['id'] ?>"><?= ($car['archived'] == 'false') ? 'Archive' : 'Restore'; ?></a></td>
-                <td><a href="/admin/editcar?id=<?= $car['id'] ?>">Edit</a></td>
-                <td><a href="/admin/deletecar?id=<?= $car['id'] ?>">Delete</a></td>
+                <td><a style="float: right" href="/admin/archive?id=<?= $car['id'] ?>"><?= ($car['archived'] == 'false') ? 'Archive' : 'Restore'; ?></a></td>
+                <td><a style="float: right" href="/admin/editcar?id=<?= $car['id'] ?>">Edit</a></td>
+                <td><a style="float: right" href="/admin/deletecar?id=<?= $car['id'] ?>">Delete</a></td>
             </tr>
         <?php } ?>
 

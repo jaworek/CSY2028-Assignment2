@@ -1,6 +1,4 @@
-<?php
-require 'sidepanel.html.php';
-?>
+<?php require 'sidepanel.html.php'; ?>
 
 <section class="right">
     <form method="post">

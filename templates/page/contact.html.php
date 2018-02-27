@@ -1,5 +1,5 @@
 <p>Please call us on 01604 90345 or email <a href="mailto:enquiries@clairscars.co.uk">enquiries@clairscars.co.uk</a></p>
-<form>
+<form method="post">
     <label>Name:</label>
     <input type="text" name="name">
 
@@ -10,7 +10,7 @@
     <input type="text" name="telephone">
 
     <label>Inquiry</label>
-    <textarea name="inquiry"></textarea>
+    <textarea name="message"></textarea>
 
     <input type="submit" name="submit" value="Send">
 </form>

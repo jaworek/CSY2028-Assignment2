@@ -180,11 +180,14 @@ class Admin
         $this->isLogged();
 
         if (isset($_POST['submit'])) {
+// Earlier price inserted only if it is higher than the current price
+            $earlierPrice = $this->carsTable->find('id', $_POST['id'])[0]['price'];
 
             $record = [
                 'name' => $_POST['name'],
                 'description' => $_POST['description'],
                 'price' => $_POST['price'],
+                'earlier_price' => ($earlierPrice > $_POST['price']) ? $earlierPrice : NULL,
                 'manufacturerId' => $_POST['manufacturerId'],
                 'id' => $_POST['id']
             ];
@@ -244,6 +247,7 @@ class Admin
 
         if (isset($_POST['submit'])) {
             $this->carsTable->delete('id', $_GET['id']);
+            header('Location: cars');
         }
 
         return [
@@ -262,6 +266,7 @@ class Admin
 
         if (isset($_POST['submit'])) {
             $this->manufacturersTable->delete('id', $_GET['id']);
+            header('Location: manufacturers');
         }
 
         return [
@@ -271,6 +276,26 @@ class Admin
             'variables' => [
                 'manufacturer' => $_GET['id']
             ]
+        ];
+    }
+
+    public function addStaff()
+    {
+        return [
+            'template' => 'admin/addstaff.html.php',
+            'title' => 'Admin',
+            'class' => 'admin',
+            'variables' => []
+        ];
+    }
+
+    public function addNews()
+    {
+        return [
+            'template' => 'admin/addnews.html.php',
+            'title' => 'Admin',
+            'class' => 'admin',
+            'variables' => []
         ];
     }
 }

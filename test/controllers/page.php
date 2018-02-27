@@ -3,6 +3,13 @@
 namespace Test\Controllers;
 class Page
 {
+    private $inquiresTable;
+
+    public function __construct($inquiresTable)
+    {
+        $this->inquiresTable = $inquiresTable;
+    }
+
     public function home()
     {
         return [
@@ -23,6 +30,17 @@ class Page
 
     public function contact()
     {
+        if (isset($_POST['submit'])) {
+            $record = [
+                'name' => $_POST['name'],
+                'email' => $_POST['email'],
+                'telephone' => $_POST['telephone'],
+                'message' => $_POST['message']
+            ];
+
+            $this->inquiresTable->insert($record);
+        }
+
         return [
             'template' => 'page/contact.html.php',
             'title' => 'Contact us',
