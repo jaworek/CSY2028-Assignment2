@@ -1,22 +1,35 @@
 <?php require 'sidepanel.html.php'; ?>
 
 <section class="right">
-    <h2>Edit Car</h2>
+    <h2><?= $title ?> Car</h2>
 
     <form method="POST" enctype="multipart/form-data">
 
-        <input type="hidden" name="id" value="<?= $car['id']; ?>"/>
-        <label>Name</label>
-        <input type="text" name="name" value="<?= $car['name']; ?>"/>
+        <input type="hidden" name="car[id]" value="<?= $car['id'] ?? '' ?>"/>
+        <label>Car model</label>
+        <input type="text" name="car[name]" value="<?= $car['name'] ?? '' ?>"/>
 
         <label>Description</label>
-        <textarea name="description"><?= $car['description']; ?></textarea>
+        <textarea name="car[description]"><?= $car['description'] ?? '' ?></textarea>
 
         <label>Price</label>
-        <input type="text" name="price" value="<?= $car['price']; ?>"/>
+        <input type="text" name="car[price]" value="<?= $car['price'] ?? '' ?>"/>
+
+        <label>Engine type</label>
+        <select name="car[engine_type]">
+            <option value="Diesel">Diesel</option>
+            <option value="Petrol">Petrol</option>
+            <option value="Electric">Electric</option>
+        </select>
+
+        <label>Mileage</label>
+        <input type="number" name="car[mileage]" value="<?= $car['mileage'] ?? '' ?>">
+
+        <label>Production year</label>
+        <input type="number" name="car[production_year]" value="<?= $car['production_year'] ?? '' ?>">
 
         <label>Category</label>
-        <select name="manufacturerId">
+        <select name="car[manufacturerId]">
             <?php foreach ($manufacturers as $manufacturer) {
                 if ($car['categoryId'] == $manufacturer['id']) { ?>
                     <option selected="selected" value="<?= $manufacturer['id'] ?>"><?= $manufacturer['name'] ?></option>
@@ -27,7 +40,7 @@
         </select>
 
         <!--    Wrong pathway specified (fixed, add note in documentation)   -->
-        <?php if (file_exists('images/cars/' . $car['id'] . '.jpg')) { ?>
+        <?php if (isset($car) && file_exists('images/cars/' . $car['id'] . '.jpg')) { ?>
             <label>Current image</label>
             <img src="../images/cars/<?= $car['id'] ?>.jpg"/>
         <?php } ?>

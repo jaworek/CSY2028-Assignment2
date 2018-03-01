@@ -1,11 +1,16 @@
 <?php
 
-namespace Test;
+namespace Cars;
 
+use Cars\Controllers\AdminInquires;
 use Classes\DatabaseTable;
-use Test\Controllers\Admin;
-use Test\Controllers\Car;
-use Test\Controllers\Page;
+use Cars\Controllers\AdminCars;
+use Cars\Controllers\AdminManufacturers;
+use Cars\Controllers\AdminNews;
+use Cars\Controllers\AdminStaff;
+use Cars\Controllers\Images;
+use Cars\Controllers\Admin;
+use Cars\Controllers\Page;
 
 class Routes
 {
@@ -22,15 +27,20 @@ class Routes
 
         // controllers
         $pageController = new Page($inquiresTable);
-        $adminController = new Admin($carsTable, $manufacturersTable);
-        $carController = new Car($carsTable, $manufacturersTable);
+        $imagesController = new Images($pdo);
+        $adminController = new Admin($adminsTable);
+        $manufacturersController = new AdminManufacturers($manufacturersTable);
+        $carsController = new AdminCars($carsTable, $manufacturersTable, $imagesController);
+        $staffController = new AdminStaff($adminsTable);
+        $newsController = new AdminNews($newsTable);
+        $inquiresController = new AdminInquires($inquiresTable);
 
         // router
         $route = ltrim(explode('?', $_SERVER['REQUEST_URI'])[0], '/');
         if (empty($route)) {
             $page = $pageController->home();
         } else if ($route == 'cars/showroom') {
-            $page = $carController->showroom($_GET['id'] ?? '');
+            $page = $carsController->showroom($_GET['id'] ?? '');
         } else if ($route == 'page/about') {
             $page = $pageController->about();
         } else if ($route == 'page/contact') {
@@ -40,31 +50,39 @@ class Routes
         } else if ($route == 'admin/admin') {
             $page = $adminController->admin();
         } else if ($route == 'admin/logout') {
-            $page = $adminController->logout();
+            $adminController->logout();
         } else if ($route == 'admin/cars') {
-            $page = $adminController->cars();
+            $page = $carsController->cars();
+        } else if ($route == 'admin/archivedcars') {
+            $page = $carsController->archivedCars();
         } else if ($route == 'admin/manufacturers') {
-            $page = $adminController->manufacturers();
+            $page = $manufacturersController->manufacturers();
         } else if ($route == 'admin/inquires') {
-            $page = $adminController->inquires();
+            $page = $inquiresController->inquires();
         } else if ($route == 'admin/archive') {
-            $page = $adminController->archive();
+            $carsController->archive();
         } else if ($route == 'admin/addcar') {
-            $page = $adminController->addCar();
+            $page = $carsController->addCar();
         } else if ($route == 'admin/addmanufacturer') {
-            $page = $adminController->addManufacturer();
+            $page = $manufacturersController->addManufacturer();
         } else if ($route == 'admin/editcar') {
-            $page = $adminController->editCar();
+            $page = $carsController->editCar();
         } else if ($route == 'admin/editmanufacturer') {
-            $page = $adminController->editManufacturer();
+            $page = $manufacturersController->editManufacturer();
         } else if ($route == 'admin/deletecar') {
-            $page = $adminController->deleteCar();
+            $page = $carsController->deleteCar();
         } else if ($route == 'admin/deletemanufacturer') {
-            $page = $adminController->deleteManufacturer();
+            $page = $manufacturersController->deleteManufacturer();
+        } else if ($route == 'admin/staff') {
+            $page = $staffController->staff();
         } else if ($route == 'admin/addstaff') {
-            $page = $adminController->addStaff();
+            $page = $staffController->addStaff();
         } else if ($route == 'admin/addnews') {
-            $page = $adminController->addNews();
+            $page = $newsController->addNews();
+        } else if ($route == 'admin/complete') {
+            $page = $inquiresController->complete();
+        } else if ($route == 'images/loadbanner') {
+            $imagesController->loadBanner();
         } else {
             $page = $pageController->home();
         }

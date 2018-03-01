@@ -20,7 +20,7 @@
             <h3><?= (empty($car['earlier_price'])) ? "£{$car['price']}" : "Was £{$car['earlier_price']}, now £{$car['price']}"; ?></h3>
             <h3>Mileage: <?= $car['mileage'] ?></h3>
             <h3>Engine type: <?= $car['engine_type'] ?></h3>
-            <h3>Production year: <?= $car['engine_type'] ?></h3>
+            <h3>Production year: <?= $car['production_year'] ?></h3>
             <p><?= $car['description'] ?></p>
         </div>
     </li>

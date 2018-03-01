@@ -14,7 +14,6 @@
 				<p>Sun: Closed</p>
 			</aside>
 			<img src="/images/logo.png"/>
-
 		</section>
 	</header>
 	<nav>

@@ -1,6 +1,6 @@
 <?php
 
-namespace Test\Controllers;
+namespace Cars\Controllers;
 class Page
 {
     private $inquiresTable;
@@ -12,10 +12,14 @@ class Page
 
     public function home()
     {
+        $news = '';
+
         return [
             'template' => 'page/home.html.php',
             'title' => 'Home',
-            'variables' => []
+            'variables' => [
+                'news' => $news
+            ]
         ];
     }
 
