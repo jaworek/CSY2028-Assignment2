@@ -43,7 +43,7 @@ class AdminStaff
 
             if ($password === $password2) {
                 $_POST['staff']['password'] = password_hash($password, PASSWORD_DEFAULT);
-                $this->adminsTable->insert($_POST['staff']);
+                $this->adminsTable->save($_POST['staff']);
             }
         }
 
@@ -62,6 +62,14 @@ class AdminStaff
 
     public function deleteStaff()
     {
-
+        return [
+            'template' => 'admin/delete.html.php',
+            'title' => 'Admin',
+            'class' => 'admin',
+            'variables' => [
+                'title' => 'staff',
+                'id' => $_GET['id']
+            ]
+        ];
     }
 }

@@ -12,9 +12,9 @@ use Cars\Controllers\Images;
 use Cars\Controllers\Admin;
 use Cars\Controllers\Page;
 
-class Routes
+class Routes implements \Classes\Routes
 {
-    public function callControllerAction()
+    public function callControllerFunction($route)
     {
         require '../database.php';
 
@@ -26,7 +26,7 @@ class Routes
         $newsTable = new DatabaseTable($pdo, 'news', 'id');
 
         // controllers
-        $pageController = new Page($inquiresTable);
+        $pageController = new Page($inquiresTable, $newsTable);
         $imagesController = new Images($pdo);
         $adminController = new Admin($adminsTable);
         $manufacturersController = new AdminManufacturers($manufacturersTable);
@@ -36,7 +36,6 @@ class Routes
         $inquiresController = new AdminInquires($inquiresTable);
 
         // router
-        $route = ltrim(explode('?', $_SERVER['REQUEST_URI'])[0], '/');
         if (empty($route)) {
             $page = $pageController->home();
         } else if ($route == 'cars/showroom') {
@@ -62,13 +61,13 @@ class Routes
         } else if ($route == 'admin/archive') {
             $carsController->archive();
         } else if ($route == 'admin/addcar') {
-            $page = $carsController->addCar();
+            $page = $carsController->modifyCar();
         } else if ($route == 'admin/addmanufacturer') {
-            $page = $manufacturersController->addManufacturer();
+            $page = $manufacturersController->modifyManufacturer();
         } else if ($route == 'admin/editcar') {
-            $page = $carsController->editCar();
+            $page = $carsController->modifyCar();
         } else if ($route == 'admin/editmanufacturer') {
-            $page = $manufacturersController->editManufacturer();
+            $page = $manufacturersController->modifyManufacturer();
         } else if ($route == 'admin/deletecar') {
             $page = $carsController->deleteCar();
         } else if ($route == 'admin/deletemanufacturer') {

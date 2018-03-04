@@ -11,4 +11,8 @@
 
         <input type="submit" name="submit" value="Save Manufacturer"/>
     </form>
+
+    <?php if (!$valid) { ?>
+        <p>Field cannot be empty</p>
+    <?php } ?>
 </section>

@@ -12,7 +12,8 @@ class EntryPoint
 
     public function run()
     {
-        $page = $this->routes->callControllerAction();
+        $route = ltrim(explode('?', $_SERVER['REQUEST_URI'])[0], '/');
+        $page = $this->routes->callControllerFunction($route);
 
         $output = $this->loadTemplate('../templates/' . $page['template'], $page['variables']);
         $title = $page['title'];

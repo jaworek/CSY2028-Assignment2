@@ -14,3 +14,7 @@
 
     <input type="submit" name="submit" value="Send">
 </form>
+
+<?php if ($message) { ?>
+    <p>Thank you for your inquiry. Staff will soon reply to your request.</p>
+<?php } ?>

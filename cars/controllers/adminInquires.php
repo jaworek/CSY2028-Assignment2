@@ -39,14 +39,12 @@ class AdminInquires
     {
         $this->isLogged();
 
-//        $inquiry = $this->inquiresTable->find('id', $_GET['id'])[0];
-
         $inquiry = [];
         $inquiry['id'] = $_GET['id'];
         $inquiry['admin_id'] = $_SESSION['id'];
         $inquiry['complete'] = 'true';
 
-        $this->inquiresTable->update($inquiry);
+        $this->inquiresTable->save($inquiry);
 
         header('Location: inquires');
         exit();

@@ -40,7 +40,7 @@
         </select>
 
         <!--    Wrong pathway specified (fixed, add note in documentation)   -->
-        <?php if (isset($car) && file_exists('images/cars/' . $car['id'] . '.jpg')) { ?>
+        <?php if (isset($_GET['id']) && file_exists('images/cars/' . $car['id'] . '.jpg')) { ?>
             <label>Current image</label>
             <img src="../images/cars/<?= $car['id'] ?>.jpg"/>
         <?php } ?>

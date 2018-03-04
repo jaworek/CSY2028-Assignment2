@@ -34,17 +34,32 @@ class AdminManufacturers
         ];
     }
 
-    public function addManufacturer()
+    public function modifyManufacturer()
     {
         $this->isLogged();
 
+        $valid = true;
+
         if (isset($_POST['submit'])) {
+            $record['name'] = $_POST['name'];
 
-            $record = [
-                'name' => $_POST['name']
-            ];
+            if (isset($_GET['id'])) {
+                $record['id'] = $_GET['id'];
+            }
 
-            $this->manufacturersTable->insert($record);
+            if ($_POST['name'] == '') {
+                $valid = false;
+            }
+
+            if ($valid) {
+                $this->manufacturersTable->save($record);
+                header('Location: manufacturers');
+                exit();
+            }
+        }
+
+        if (isset($_GET['id'])) {
+            $manufacturer = $this->manufacturersTable->find('id', $_GET['id'])[0];
         }
 
         return [
@@ -52,35 +67,9 @@ class AdminManufacturers
             'title' => 'Admin',
             'class' => 'admin',
             'variables' => [
-                'title' => 'Add'
-            ]
-        ];
-    }
-
-    public function editManufacturer()
-    {
-        $this->isLogged();
-
-        if (isset($_POST['submit'])) {
-
-            $record = [
-                'name' => $_POST['name'],
-                'id' => $_POST['id']
-            ];
-
-            $this->manufacturersTable->update($record);
-
-        }
-
-        $manufacturer = $this->manufacturersTable->find('id', $_GET['id'])[0];
-
-        return [
-            'template' => 'admin/modifymanufacturer.html.php',
-            'title' => 'Admin',
-            'class' => 'admin',
-            'variables' => [
-                'title' => 'Edit',
-                'manufacturer' => $manufacturer
+                'title' => (isset($_GET['id'])) ? 'Edit' : 'Add',
+                'manufacturer' => $manufacturer ?? '',
+                'valid' => $valid
             ]
         ];
     }

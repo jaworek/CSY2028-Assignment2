@@ -86,7 +86,7 @@ class AdminCars
         $this->isLogged();
 
         if (isset($_POST['submit'])) {
-            $this->carsTable->insert($_POST['car']);
+            $this->carsTable->save($_POST['car']);
             $this->imagesController->uploadImage();
         }
 
@@ -115,7 +115,7 @@ class AdminCars
                 $_POST['car']['earlier_price'] = NULL;
             }
 
-            $this->carsTable->update($_POST['car']);
+            $this->carsTable->save($_POST['car']);
             $this->imagesController->uploadImage();
         }
 
@@ -129,6 +129,41 @@ class AdminCars
             'variables' => [
                 'title' => 'Edit',
                 'car' => $car,
+                'manufacturers' => $manufacturers
+            ]
+        ];
+    }
+
+    public function modifyCar()
+    {
+        $this->isLogged();
+
+        if (isset($_POST['submit'])) {
+            if (isset($_GET['id'])) {
+                // Earlier price inserted only if it is higher than the current price
+                $_POST['car']['earlier_price'] = $this->carsTable->find('id', $_POST['car']['id'])[0]['price'];
+
+                if ($_POST['car']['earlier_price'] <= $_POST['car']['price']) {
+                    $_POST['car']['earlier_price'] = NULL;
+                }
+            }
+
+            $this->carsTable->save($_POST['car']);
+            $this->imagesController->uploadImage();
+        }
+
+        if (isset($_GET['id'])) {
+            $car = $this->carsTable->find('id', $_GET['id'])[0];
+        }
+        $manufacturers = $this->manufacturersTable->findAll();
+
+        return [
+            'template' => 'admin/modifycar.html.php',
+            'title' => 'Admin',
+            'class' => 'admin',
+            'variables' => [
+                'title' => (isset($_GET['id'])) ? 'Edit' : 'Add',
+                'car' => $car ?? '',
                 'manufacturers' => $manufacturers
             ]
         ];

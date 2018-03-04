@@ -19,12 +19,17 @@ class AdminNews
         }
     }
 
+    public function news()
+    {
+        $this->isLogged();
+    }
+
     public function addNews()
     {
         $this->isLogged();
 
         if (isset($_POST['submit'])) {
-
+            $this->newsTable->save($_POST['news']);
         }
 
         return [

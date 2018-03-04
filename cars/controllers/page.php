@@ -4,15 +4,17 @@ namespace Cars\Controllers;
 class Page
 {
     private $inquiresTable;
+    private $newsTable;
 
-    public function __construct($inquiresTable)
+    public function __construct($inquiresTable, $newsTable)
     {
         $this->inquiresTable = $inquiresTable;
+        $this->newsTable = $newsTable;
     }
 
     public function home()
     {
-        $news = '';
+        $news = $this->newsTable->findAll();
 
         return [
             'template' => 'page/home.html.php',
@@ -42,13 +44,17 @@ class Page
                 'message' => $_POST['message']
             ];
 
+            $message = true;
+
             $this->inquiresTable->insert($record);
         }
 
         return [
             'template' => 'page/contact.html.php',
             'title' => 'Contact us',
-            'variables' => []
+            'variables' => [
+                'message' => $message ?? false
+            ]
         ];
     }
 

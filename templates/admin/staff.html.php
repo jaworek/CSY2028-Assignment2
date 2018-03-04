@@ -7,7 +7,7 @@
 
     <?php foreach ($staff as $employee) { ?>
         <div>
-            <?= $employee['email'] ?>
+            <p><?= $employee['email'] ?> <a href="/admin/deleteStaff?<?= $employee['id'] ?>">Delete</a></p>
         </div>
     <?php } ?>
 </section>

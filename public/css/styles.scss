@@ -167,6 +167,10 @@ footer {
     background-color: #004225;
 }
 
+form {
+    overflow: auto;
+}
+
 form select, form label, form input, form textarea, form img {
     float: left;
 
@@ -353,4 +357,11 @@ main h1 {
 
 main img {
     display: block;
+}
+
+.inquiry {
+    margin-bottom: 1em;
+    padding: 0.5em;
+
+    border: 1px solid black;
 }

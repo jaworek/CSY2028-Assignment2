@@ -4,10 +4,15 @@
     <h2>Inquires</h2>
 
     <?php foreach ($inquires as $inquiry) { ?>
-        <div>
-            <?= $inquiry['message'] ?>
+        <div class="inquiry">
+            <p>Name: <?= $inquiry['name'] ?></p>
+            <p>Email: <?= $inquiry['email'] ?></p>
+            <p>Message: <?= $inquiry['message'] ?></p>
+
             <?php if ($inquiry['complete'] == 'false') { ?>
                 <a href="/admin/complete?id=<?= $inquiry['id'] ?>">Complete</a>
+            <?php } elseif ($inquiry['admin_id'] != null) { ?>
+                <p>Inquiry completed by: <?= $inquiry['admin_id'] ?></p>
             <?php } ?>
         </div>
     <?php } ?>
