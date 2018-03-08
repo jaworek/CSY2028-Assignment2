@@ -5,15 +5,20 @@ class EntryPoint
 {
     private $routes;
 
-    public function __construct($routes)
+    public function __construct(Routes $routes)
     {
         $this->routes = $routes;
     }
 
     public function run()
     {
-        $route = ltrim(explode('?', $_SERVER['REQUEST_URI'])[0], '/');
-        $page = $this->routes->callControllerFunction($route);
+        $route = strtolower(ltrim(explode('?', $_SERVER['REQUEST_URI'])[0], '/'));
+        $method = $_SERVER['REQUEST_METHOD'];
+        $routes = $this->routes->getRoutes();
+        $controller = $routes[$route][$method]['controller'];
+        $action = $routes[$route][$method]['action'];
+
+        $page = $controller->$action();
 
         $output = $this->loadTemplate('../templates/' . $page['template'], $page['variables']);
         $title = $page['title'];

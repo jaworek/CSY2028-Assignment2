@@ -17,6 +17,8 @@ class Account
 
             if ($_POST['password'] == $user['password']) {
                 $_SESSION['loggedin'] = true;
+                $_SESSION['id'] = $user['id'];
+                $_SESSION['email'] = $user['email'];
                 header('Location: admin');
             }
         }

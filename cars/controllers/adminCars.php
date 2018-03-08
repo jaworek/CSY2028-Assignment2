@@ -53,12 +53,12 @@ class AdminCars
         ];
     }
 
-    public function showroom($manufacturerId)
+    public function showroom()
     {
-        if (empty($manufacturerId)) {
-            $cars = $this->carsTable->find('archived', 'false');
+        if (isset($_GET['id'])) {
+            $cars = $this->carsTable->find('manufacturerId', $_GET['id']);
         } else {
-            $cars = $this->carsTable->find('manufacturerId', $manufacturerId);
+            $cars = $this->carsTable->find('archived', 'false');
         }
 
         $allManufacturers = $this->manufacturersTable->findAll();
@@ -81,76 +81,9 @@ class AdminCars
         ];
     }
 
-    public function addCar()
-    {
-        $this->isLogged();
-
-        if (isset($_POST['submit'])) {
-            $this->carsTable->save($_POST['car']);
-            $this->imagesController->uploadImage();
-        }
-
-        $manufacturers = $this->manufacturersTable->findAll();
-
-        return [
-            'template' => 'admin/modifycar.html.php',
-            'title' => 'Admin',
-            'class' => 'admin',
-            'variables' => [
-                'title' => 'Add',
-                'manufacturers' => $manufacturers
-            ]
-        ];
-    }
-
-    public function editCar()
-    {
-        $this->isLogged();
-
-        if (isset($_POST['submit'])) {
-            // Earlier price inserted only if it is higher than the current price
-            $_POST['car']['earlier_price'] = $this->carsTable->find('id', $_POST['car']['id'])[0]['price'];
-
-            if ($_POST['car']['earlier_price'] <= $_POST['car']['price']) {
-                $_POST['car']['earlier_price'] = NULL;
-            }
-
-            $this->carsTable->save($_POST['car']);
-            $this->imagesController->uploadImage();
-        }
-
-        $car = $this->carsTable->find('id', $_GET['id'])[0];
-        $manufacturers = $this->manufacturersTable->findAll();
-
-        return [
-            'template' => 'admin/modifycar.html.php',
-            'title' => 'Admin',
-            'class' => 'admin',
-            'variables' => [
-                'title' => 'Edit',
-                'car' => $car,
-                'manufacturers' => $manufacturers
-            ]
-        ];
-    }
-
     public function modifyCar()
     {
         $this->isLogged();
-
-        if (isset($_POST['submit'])) {
-            if (isset($_GET['id'])) {
-                // Earlier price inserted only if it is higher than the current price
-                $_POST['car']['earlier_price'] = $this->carsTable->find('id', $_POST['car']['id'])[0]['price'];
-
-                if ($_POST['car']['earlier_price'] <= $_POST['car']['price']) {
-                    $_POST['car']['earlier_price'] = NULL;
-                }
-            }
-
-            $this->carsTable->save($_POST['car']);
-            $this->imagesController->uploadImage();
-        }
 
         if (isset($_GET['id'])) {
             $car = $this->carsTable->find('id', $_GET['id'])[0];
@@ -167,6 +100,24 @@ class AdminCars
                 'manufacturers' => $manufacturers
             ]
         ];
+    }
+
+    public function saveCar()
+    {
+        if (isset($_GET['id'])) {
+            // Earlier price inserted only if it is higher than the current price
+            $_POST['car']['earlier_price'] = $this->carsTable->find('id', $_POST['car']['id'])[0]['price'];
+
+            if ($_POST['car']['earlier_price'] <= $_POST['car']['price']) {
+                $_POST['car']['earlier_price'] = NULL;
+            }
+        }
+
+        $_POST['car']['admin_id'] = $_SESSION['id'];
+        $this->carsTable->save($_POST['car']);
+        $this->imagesController->uploadImage('cars');
+
+        header('Location: cars');
     }
 
     public function deleteCar()
@@ -189,7 +140,7 @@ class AdminCars
         ];
     }
 
-    //    Ask Tom if there is a way to remove number keys from array
+    //    Ask Tom if there is a way to remove number keys from array - can be fixed by using PDO::FETCH_COLUMN
     public function archive()
     {
         $this->isLogged();
@@ -204,7 +155,7 @@ class AdminCars
             header("Location: archivedcars");
         }
 
-        $this->carsTable->update($record);
+        $this->carsTable->save($record);
         exit();
     }
 }

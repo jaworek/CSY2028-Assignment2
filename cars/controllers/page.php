@@ -5,22 +5,29 @@ class Page
 {
     private $inquiresTable;
     private $newsTable;
+    private $adminsTable;
 
-    public function __construct($inquiresTable, $newsTable)
+    public function __construct($inquiresTable, $newsTable, $adminsTable)
     {
         $this->inquiresTable = $inquiresTable;
         $this->newsTable = $newsTable;
+        $this->adminsTable = $adminsTable;
     }
 
     public function home()
     {
         $news = $this->newsTable->findAll();
 
+        foreach ($news as $key => $element) {
+            $element['author_name'] = $this->adminsTable->find('id', $element['admin_id'])[0]['name'];
+            $news[$key] = $element;
+        }
+
         return [
             'template' => 'page/home.html.php',
             'title' => 'Home',
             'variables' => [
-                'news' => $news
+                'news' => $news,
             ]
         ];
     }
@@ -34,28 +41,36 @@ class Page
         ];
     }
 
-    public function contact()
+    public function contact($error = [], $message = false)
     {
-        if (isset($_POST['submit'])) {
-            $record = [
-                'name' => $_POST['name'],
-                'email' => $_POST['email'],
-                'telephone' => $_POST['telephone'],
-                'message' => $_POST['message']
-            ];
-
-            $message = true;
-
-            $this->inquiresTable->insert($record);
-        }
-
         return [
             'template' => 'page/contact.html.php',
             'title' => 'Contact us',
             'variables' => [
-                'message' => $message ?? false
+                'error' => $error,
+                'message' => $message
             ]
         ];
+    }
+
+    public function sendInquiry()
+    {
+        $contact = $_POST['contact'];
+        $error = [];
+        $message = false;
+
+        if ($contact['name'] == '') {
+            $error['name'] = true;
+        } elseif ($contact['email'] == '') {
+            $error['email'] = true;
+        } elseif ($contact['telephone'] == '') {
+            $error['telephone'] = true;
+        } else {
+            $message = true;
+            $this->inquiresTable->save($_POST['contact']);
+        }
+
+        return $this->contact($error, $message);
     }
 
     public function careers()
@@ -64,6 +79,20 @@ class Page
             'template' => 'page/careers.html.php',
             'title' => 'Claire’s Careers',
             'variables' => []
+        ];
+    }
+
+    public function news()
+    {
+        $news = $this->newsTable->find('id', $_GET['id'])[0];
+        $news['author_name'] = $this->adminsTable->find('id', $news['admin_id'])[0]['name'];
+
+        return [
+            'template' => 'page/news.html.php',
+            'title' => 'Claire’s Careers',
+            'variables' => [
+                'news' => $news,
+            ]
         ];
     }
 }

@@ -1,7 +1,9 @@
 <?php
 
 namespace Classes;
+
 use Exception;
+use PDO;
 
 class DatabaseTable
 {
@@ -9,7 +11,7 @@ class DatabaseTable
     private $table;
     private $primaryKey;
 
-    public function __construct($pdo, $table, $primaryKey)
+    public function __construct(PDO $pdo, string $table, string $primaryKey)
     {
         $this->pdo = $pdo;
         $this->table = $table;
@@ -42,7 +44,7 @@ class DatabaseTable
         return $rows;
     }
 
-    public function insert($record)
+    private function insert($record)
     {
         $keys = array_keys($record);
 
@@ -55,7 +57,7 @@ class DatabaseTable
         $stmt->execute($record);
     }
 
-    public function update($record)
+    private function update($record)
     {
         $parameters = [];
         foreach ($record as $key => $value) {

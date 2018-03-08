@@ -21,6 +21,7 @@ class AdminStaff
 
     public function staff()
     {
+        $this->isLogged();
         $staff = $this->adminsTable->findAll();
 
         return [
@@ -57,11 +58,20 @@ class AdminStaff
 
     public function editStaff()
     {
+        $this->isLogged();
+
 
     }
 
     public function deleteStaff()
     {
+        $this->isLogged();
+
+        if (isset($_POST['submit'])) {
+            $this->adminsTable->delete('id', $_GET['id']);
+            header('Location: staff');
+        }
+
         return [
             'template' => 'admin/delete.html.php',
             'title' => 'Admin',

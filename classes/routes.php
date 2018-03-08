@@ -4,5 +4,7 @@ namespace Classes;
 
 interface Routes
 {
-    public function callControllerFunction($route);
+    public function getRoutes();
+
+    public function getAuthentication();
 }

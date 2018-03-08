@@ -49,11 +49,11 @@ class Images
         return $contents;
     }
 
-    public function uploadImage()
+    public function uploadImage($path)
     {
         if ($_FILES['image']['error'] == 0) {
             $fileName = $this->pdo->lastInsertId() . '.jpg';
-            move_uploaded_file($_FILES['image']['tmp_name'], 'images/cars/' . $fileName);
+            move_uploaded_file($_FILES['image']['tmp_name'], "images/$path/" . $fileName);
         }
     }
 }
