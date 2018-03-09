@@ -1,7 +1,7 @@
 <section class="right">
     <h2>Log in</h2>
 
-    <?php if (!empty($error)) { ?>
+    <?php if ($error) { ?>
         <div class="error">
             Could not login
         </div>

@@ -1,15 +1,10 @@
 <?php foreach ($cars as $car) {
     foreach ($manufacturers as $manufacturer) {
-        if ($manufacturer['id'] === $car['manufacturerId']) {
+        if ($manufacturer['id'] === $car['manufacturer_id']) {
             break;
         }
-    }
-//    $manufacturer = array_filter($manufacturers, function ($i, $car) {
-//        echo $i[0];
-//        echo $car;
-//        echo $i[0] === $car['manufacturerId'];
-//    }, ARRAY_FILTER_USE_BOTH);
-    ?>
+    } ?>
+
     <li>
         <?php if (file_exists("images/cars/{$car['id']}.jpg")) { ?>
             <a href="images/cars/<?= $car['id'] ?>.jpg"><img src="/images/cars/<?= $car['id'] ?>.jpg"/></a>

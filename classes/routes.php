@@ -4,7 +4,7 @@ namespace Classes;
 
 interface Routes
 {
-    public function getRoutes();
+    public function getRoutes(): array;
 
-    public function getAuthentication();
+    public function getAuthentication(): Authentication;
 }

@@ -10,12 +10,16 @@ class DatabaseTable
     private $pdo;
     private $table;
     private $primaryKey;
+    private $className;
+    private $constructorArgs;
 
-    public function __construct(PDO $pdo, string $table, string $primaryKey)
+    public function __construct(PDO $pdo, string $table, string $primaryKey, string $className = '\stdClass', array $constructorArgs = [])
     {
         $this->pdo = $pdo;
         $this->table = $table;
         $this->primaryKey = $primaryKey;
+        $this->className = $className;
+        $this->constructorArgs = $constructorArgs;
     }
 
     public function find($field, $value)

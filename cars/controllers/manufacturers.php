@@ -2,26 +2,19 @@
 
 namespace Cars\Controllers;
 
-class AdminManufacturers
+use Classes\DatabaseTable;
+
+class Manufacturers
 {
     private $manufacturersTable;
 
-    public function __construct($manufacturersTable)
+    public function __construct(DatabaseTable $manufacturersTable)
     {
         $this->manufacturersTable = $manufacturersTable;
     }
 
-    private function isLogged()
-    {
-        if (!isset($_SESSION['loggedin']) && $_SESSION['loggedin'] != true) {
-            header("Location: /admin/admin");
-            exit();
-        }
-    }
-
     public function manufacturers()
     {
-        $this->isLogged();
         $manufacturers = $this->manufacturersTable->findAll();
 
         return [
@@ -34,30 +27,8 @@ class AdminManufacturers
         ];
     }
 
-    public function modifyManufacturer()
+    public function modifyManufacturer($error = false)
     {
-        $this->isLogged();
-
-        $valid = true;
-
-        if (isset($_POST['submit'])) {
-            $record['name'] = $_POST['name'];
-
-            if (isset($_GET['id'])) {
-                $record['id'] = $_GET['id'];
-            }
-
-            if ($_POST['name'] == '') {
-                $valid = false;
-            }
-
-            if ($valid) {
-                $this->manufacturersTable->save($record);
-                header('Location: manufacturers');
-                exit();
-            }
-        }
-
         if (isset($_GET['id'])) {
             $manufacturer = $this->manufacturersTable->find('id', $_GET['id'])[0];
         }
@@ -69,20 +40,35 @@ class AdminManufacturers
             'variables' => [
                 'title' => (isset($_GET['id'])) ? 'Edit' : 'Add',
                 'manufacturer' => $manufacturer ?? '',
-                'valid' => $valid
+                'error' => $error
             ]
         ];
     }
 
-    public function deleteManufacturer()
+    public function saveManufacturer()
     {
-        $this->isLogged();
+        $error = false;
+        $record['name'] = $_POST['name'];
 
-        if (isset($_POST['submit'])) {
-            $this->manufacturersTable->delete('id', $_GET['id']);
-            header('Location: manufacturers');
+        if (isset($_GET['id'])) {
+            $record['id'] = $_GET['id'];
         }
 
+        if (empty($_POST['name'])) {
+            $error = true;
+        }
+
+        if (!$error) {
+            $this->manufacturersTable->save($record);
+            header('Location: manufacturers');
+            exit();
+        }
+
+        return $this->modifyManufacturer($error);
+    }
+
+    public function deleteManufacturer()
+    {
         return [
             'template' => 'admin/delete.html.php',
             'title' => 'Admin',
@@ -92,5 +78,11 @@ class AdminManufacturers
                 'id' => $_GET['id']
             ]
         ];
+    }
+
+    public function processDelete()
+    {
+        $this->manufacturersTable->delete('id', $_GET['id']);
+        header('Location: manufacturers');
     }
 }

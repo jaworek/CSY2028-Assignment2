@@ -2,27 +2,22 @@
 
 namespace Cars\Controllers;
 
-class AdminInquires
+use Classes\Authentication;
+use Classes\DatabaseTable;
+
+class Inquires
 {
     private $inquiresTable;
+    private $authentication;
 
-    public function __construct($inquiresTable)
+    public function __construct(DatabaseTable $inquiresTable, Authentication $authentication)
     {
         $this->inquiresTable = $inquiresTable;
-    }
-
-    private function isLogged()
-    {
-        if (!isset($_SESSION['loggedin']) && $_SESSION['loggedin'] != true) {
-            header("Location: /admin/admin");
-            exit();
-        }
+        $this->authentication = $authentication;
     }
 
     public function inquires()
     {
-        $this->isLogged();
-
         $inquires = $this->inquiresTable->findAll();
 
         return [
@@ -37,11 +32,11 @@ class AdminInquires
 
     public function complete()
     {
-        $this->isLogged();
+        $author = $this->authentication->getUser();
 
         $inquiry = [];
         $inquiry['id'] = $_GET['id'];
-        $inquiry['admin_id'] = $_SESSION['id'];
+        $inquiry['admin_id'] = $author['id'];
         $inquiry['complete'] = 'true';
 
         $this->inquiresTable->save($inquiry);

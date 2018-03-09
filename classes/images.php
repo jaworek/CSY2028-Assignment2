@@ -1,14 +1,15 @@
 <?php
 
-namespace Cars\Controllers;
+namespace Classes;
 
 use DirectoryIterator;
+use PDO;
 
 class Images
 {
     private $pdo;
 
-    public function __construct($pdo)
+    public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
     }

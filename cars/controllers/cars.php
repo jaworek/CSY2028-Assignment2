@@ -2,30 +2,24 @@
 
 namespace Cars\Controllers;
 
-class AdminCars
+use Classes\DatabaseTable;
+use Classes\Images;
+
+class Cars
 {
     private $carsTable;
     private $manufacturersTable;
-    private $imagesController;
+    private $images;
 
-    public function __construct($carsTable, $manufacturersTable, $imagesController)
+    public function __construct(DatabaseTable $carsTable, DatabaseTable $manufacturersTable, Images $images)
     {
         $this->carsTable = $carsTable;
         $this->manufacturersTable = $manufacturersTable;
-        $this->imagesController = $imagesController;
-    }
-
-    private function isLogged()
-    {
-        if (!isset($_SESSION['loggedin']) && $_SESSION['loggedin'] != true) {
-            header("Location: /admin/admin");
-            exit();
-        }
+        $this->images = $images;
     }
 
     public function cars()
     {
-        $this->isLogged();
         $cars = $this->carsTable->find('archived', 'false');
 
         return [
@@ -40,7 +34,6 @@ class AdminCars
 
     public function archivedCars()
     {
-        $this->isLogged();
         $cars = $this->carsTable->find('archived', 'true');
 
         return [
@@ -55,8 +48,9 @@ class AdminCars
 
     public function showroom()
     {
+//        FIXME archived cars show on the page when they are filtered by manufacturer, also if all cars from specific manufacturer are archived option to filter is still present
         if (isset($_GET['id'])) {
-            $cars = $this->carsTable->find('manufacturerId', $_GET['id']);
+            $cars = $this->carsTable->find('manufacturer_id', $_GET['id']);
         } else {
             $cars = $this->carsTable->find('archived', 'false');
         }
@@ -65,7 +59,7 @@ class AdminCars
         $manufacturers = [];
 
         foreach ($allManufacturers as $manufacturer) {
-            $count = $this->carsTable->count('manufacturerId', $manufacturer['id']);
+            $count = $this->carsTable->count('manufacturer_id', $manufacturer['id']);
             if ($count != 0) {
                 array_push($manufacturers, $manufacturer);
             }
@@ -83,8 +77,6 @@ class AdminCars
 
     public function modifyCar()
     {
-        $this->isLogged();
-
         if (isset($_GET['id'])) {
             $car = $this->carsTable->find('id', $_GET['id'])[0];
         }
@@ -115,20 +107,13 @@ class AdminCars
 
         $_POST['car']['admin_id'] = $_SESSION['id'];
         $this->carsTable->save($_POST['car']);
-        $this->imagesController->uploadImage('cars');
+        $this->images->uploadImage('cars');
 
         header('Location: cars');
     }
 
     public function deleteCar()
     {
-        $this->isLogged();
-
-        if (isset($_POST['submit'])) {
-            $this->carsTable->delete('id', $_GET['id']);
-            header('Location: cars');
-        }
-
         return [
             'template' => 'admin/delete.html.php',
             'title' => 'Admin',
@@ -140,10 +125,15 @@ class AdminCars
         ];
     }
 
+    public function processDelete()
+    {
+        $this->carsTable->delete('id', $_GET['id']);
+        header('Location: cars');
+    }
+
     //    Ask Tom if there is a way to remove number keys from array - can be fixed by using PDO::FETCH_COLUMN
     public function archive()
     {
-        $this->isLogged();
         $car = $this->carsTable->find('id', $_GET['id'])[0];
         $record = [];
         $record['id'] = $car['id'];

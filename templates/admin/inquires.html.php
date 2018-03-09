@@ -9,7 +9,7 @@
             <p>Email: <?= $inquiry['email'] ?></p>
             <p>Message: <?= $inquiry['message'] ?></p>
 
-            <?php if ($inquiry['complete'] == 'false') { ?>
+            <?php if ($inquiry['admin_id'] == null) { ?>
                 <a href="/admin/complete?id=<?= $inquiry['id'] ?>">Complete</a>
             <?php } elseif ($inquiry['admin_id'] != null) { ?>
                 <p>Inquiry completed by: <?= $inquiry['admin_id'] ?></p>

@@ -2,31 +2,24 @@
 
 namespace Cars\Controllers;
 
-class AdminNews
+use Classes\DatabaseTable;
+use Classes\Images;
+
+class News
 {
     private $newsTable;
     private $adminsTable;
-    private $imagesController;
+    private $images;
 
-    public function __construct($newsTable, $adminsTable, $imagesController)
+    public function __construct(DatabaseTable $newsTable, DatabaseTable $adminsTable, Images $images)
     {
         $this->newsTable = $newsTable;
         $this->adminsTable = $adminsTable;
-        $this->imagesController = $imagesController;
-    }
-
-    private function isLogged()
-    {
-        if (!isset($_SESSION['loggedin']) && $_SESSION['loggedin'] != true) {
-            header("Location: /admin/admin");
-            exit();
-        }
+        $this->images = $images;
     }
 
     public function news()
     {
-        $this->isLogged();
-
         $news = $this->newsTable->findAll();
 
         foreach ($news as $key => $element) {
@@ -46,8 +39,6 @@ class AdminNews
 
     public function addNews()
     {
-        $this->isLogged();
-
         return [
             'template' => 'admin/addnews.html.php',
             'title' => 'Admin',
@@ -61,26 +52,18 @@ class AdminNews
         $_POST['news']['admin_id'] = $_SESSION['id'];
 
         $this->newsTable->save($_POST['news']);
-        $this->imagesController->uploadImage('news');
+        $this->images->uploadImage('news');
 
         header('Location: news');
     }
 
     public function editNews()
     {
-        $this->isLogged();
-
 
     }
 
     public function deleteNews()
     {
-        $this->isLogged();
-
-        if (isset($_POST['submit'])) {
-            $this->newsTable->delete('id', $_GET['id']);
-            header('Location: news');
-        }
         return [
             'template' => 'admin/delete.html.php',
             'title' => 'Admin',
@@ -90,5 +73,11 @@ class AdminNews
                 'id' => $_GET['id']
             ]
         ];
+    }
+
+    public function processDelete()
+    {
+        $this->newsTable->delete('id', $_GET['id']);
+        header('Location: news');
     }
 }

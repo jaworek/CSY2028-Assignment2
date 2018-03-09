@@ -15,9 +15,15 @@ class EntryPoint
         $route = strtolower(ltrim(explode('?', $_SERVER['REQUEST_URI'])[0], '/'));
         $method = $_SERVER['REQUEST_METHOD'];
         $routes = $this->routes->getRoutes();
+        $authentication = $this->routes->getAuthentication();
+
+        if (isset($routes[$route]['login']) && !$authentication->isLoggedIn()) {
+            header('Location: /admin/login');
+            exit();
+        }
+
         $controller = $routes[$route][$method]['controller'];
         $action = $routes[$route][$method]['action'];
-
         $page = $controller->$action();
 
         $output = $this->loadTemplate('../templates/' . $page['template'], $page['variables']);
@@ -25,7 +31,6 @@ class EntryPoint
         $class = $page['class'] ?? 'home';
 
         require '../templates/layout.html.php';
-
     }
 
     public function loadTemplate($fileName, $templateVars = [])

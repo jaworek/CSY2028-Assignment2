@@ -2,53 +2,57 @@
 
 namespace Cars;
 
-use Cars\Controllers\AdminInquires;
+use Cars\Controllers\Inquires;
+use Classes\Authentication;
 use Classes\DatabaseTable;
-use Cars\Controllers\AdminCars;
-use Cars\Controllers\AdminManufacturers;
-use Cars\Controllers\AdminNews;
-use Cars\Controllers\AdminStaff;
-use Cars\Controllers\Images;
+use Cars\Controllers\Cars;
+use Cars\Controllers\Manufacturers;
+use Cars\Controllers\News;
+use Cars\Controllers\Staff;
 use Cars\Controllers\Admin;
 use Cars\Controllers\Page;
+use Classes\Images;
 
 class Routes implements \Classes\Routes
 {
-    private $pdo;
     private $carsTable;
     private $manufacturersTable;
     private $inquiresTable;
     private $adminsTable;
     private $newsTable;
 
+    private $authentication;
+    private $images;
+
     public function __construct()
     {
         require '../database.php';
 
-        $this->pdo = $pdo;
         $this->carsTable = new DatabaseTable($pdo, 'cars', 'id');
         $this->manufacturersTable = new DatabaseTable($pdo, 'manufacturers', 'id');
         $this->inquiresTable = new DatabaseTable($pdo, 'inquiries', 'id');
         $this->adminsTable = new DatabaseTable($pdo, 'admins', 'id');
         $this->newsTable = new DatabaseTable($pdo, 'news', 'id');
+
+        $this->authentication = new Authentication($this->adminsTable, 'email', 'password');
+        $this->images = new Images($pdo);
     }
 
-    public function getAuthentication()
+    public function getAuthentication(): Authentication
     {
-
+        return $this->authentication;
     }
 
-    public function getRoutes()
+    public function getRoutes(): array
     {
         // controllers
         $pageController = new Page($this->inquiresTable, $this->newsTable, $this->adminsTable);
-        $imagesController = new Images($this->pdo);
-        $adminController = new Admin($this->adminsTable);
-        $manufacturersController = new AdminManufacturers($this->manufacturersTable);
-        $carsController = new AdminCars($this->carsTable, $this->manufacturersTable, $imagesController);
-        $staffController = new AdminStaff($this->adminsTable);
-        $newsController = new AdminNews($this->newsTable, $this->adminsTable, $imagesController);
-        $inquiresController = new AdminInquires($this->inquiresTable);
+        $adminController = new Admin($this->authentication);
+        $manufacturersController = new Manufacturers($this->manufacturersTable);
+        $carsController = new Cars($this->carsTable, $this->manufacturersTable, $this->images);
+        $staffController = new Staff($this->adminsTable);
+        $newsController = new News($this->newsTable, $this->adminsTable, $this->images);
+        $inquiresController = new Inquires($this->inquiresTable, $this->authentication);
 
         $routes = [
             '' => [
@@ -95,7 +99,8 @@ class Routes implements \Classes\Routes
                 'GET' => [
                     'controller' => $adminController,
                     'action' => 'admin'
-                ]
+                ],
+                'login' => true
             ],
             'admin/login' => [
                 'GET' => [
@@ -104,7 +109,7 @@ class Routes implements \Classes\Routes
                 ],
                 'POST' => [
                     'controller' => $adminController,
-                    'action' => 'checkCredentials'
+                    'action' => 'processLogin'
                 ]
             ],
             'admin/logout' => [
@@ -167,7 +172,7 @@ class Routes implements \Classes\Routes
                 ],
                 'POST' => [
                     'controller' => $manufacturersController,
-                    'action' => 'modifyManufacturer'
+                    'action' => 'saveManufacturer'
                 ],
                 'login' => true
             ],
@@ -189,7 +194,7 @@ class Routes implements \Classes\Routes
                 ],
                 'POST' => [
                     'controller' => $manufacturersController,
-                    'action' => 'modifyManufacturer'
+                    'action' => 'saveManufacturer'
                 ],
                 'login' => true
             ],
@@ -200,18 +205,18 @@ class Routes implements \Classes\Routes
                 ],
                 'POST' => [
                     'controller' => $carsController,
-                    'action' => 'deleteCar'
+                    'action' => 'processDelete'
                 ],
                 'login' => true
             ],
             'admin/deletemanufacturer' => [
                 'GET' => [
-                    'controller' => $carsController,
+                    'controller' => $manufacturersController,
                     'action' => 'deleteManufacturer'
                 ],
                 'POST' => [
-                    'controller' => $carsController,
-                    'action' => 'deleteManufacturer'
+                    'controller' => $manufacturersController,
+                    'action' => 'processDelete'
                 ],
                 'login' => true
             ],
@@ -229,7 +234,7 @@ class Routes implements \Classes\Routes
                 ],
                 'POST' => [
                     'controller' => $staffController,
-                    'action' => 'addStaff'
+                    'action' => 'saveStaff'
                 ],
                 'login' => true
             ],
@@ -240,7 +245,7 @@ class Routes implements \Classes\Routes
                 ],
                 'POST' => [
                     'controller' => $staffController,
-                    'action' => 'deleteStaff'
+                    'action' => 'processDelete'
                 ],
                 'login' => true
             ],
@@ -269,7 +274,7 @@ class Routes implements \Classes\Routes
                 ],
                 'POST' => [
                     'controller' => $newsController,
-                    'action' => 'deleteNews'
+                    'action' => 'processDelete'
                 ],
                 'login' => true
             ],

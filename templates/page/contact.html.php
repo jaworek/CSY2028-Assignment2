@@ -11,9 +11,10 @@
     <?= ((isset($error['name']))) ? '<label class="error">Name cannot be empty</label>' : '' ?>
 
     <label>Email:</label>
-    <input type="email" name="contact[email]">
+    <input type="text" name="contact[email]">
 
-    <?= ((isset($error['email']))) ? '<label class="error">Email cannot be empty</label>' : '' ?>
+    <?= ((isset($error['empty_email']))) ? '<label class="error">Email cannot be empty</label>' : '' ?>
+    <?= ((isset($error['wrong_email']))) ? '<label class="error">This is not a valid email</label>' : '' ?>
 
     <label>Telephone:</label>
     <input type="text" name="contact[telephone]">
@@ -22,6 +23,8 @@
 
     <label>Inquiry</label>
     <textarea name="contact[message]"></textarea>
+
+    <?= ((isset($error['message']))) ? '<label class="error">Message cannot be empty</label>' : '' ?>
 
     <input type="submit" name="submit" value="Send">
 </form>
