@@ -22,10 +22,10 @@ class News
     {
         $news = $this->newsTable->findAll();
 
-        foreach ($news as $key => $element) {
-            $element['author_name'] = $this->adminsTable->find('id', $element['admin_id'])[0]['name'];
-            $news[$key] = $element;
-        }
+//        foreach ($news as $key => $element) {
+//            $element['author_name'] = $this->adminsTable->find('id', $element['admin_id'])[0]['name'];
+//            $news[$key] = $element;
+//        }
 
         return [
             'template' => 'admin/news.html.php',

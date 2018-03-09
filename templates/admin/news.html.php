@@ -7,7 +7,7 @@
 
     <?php foreach ($news as $element) { ?>
         <div>
-            <p><?= $element['title'] ?> <a href="/admin/deletenews?id=<?= $element['id'] ?>">Delete</a></p>
+            <p><?= $element->title ?> <a href="/admin/deletenews?id=<?= $element->id ?>">Delete</a></p>
         </div>
     <?php } ?>
 </section>

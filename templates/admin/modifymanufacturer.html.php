@@ -8,10 +8,10 @@
     <?php } ?>
 
     <form method="POST">
-        <input type="hidden" name="id" value="<?= $manufacturer['id'] ?? '' ?>"/>
+        <input type="hidden" name="id" value="<?= $manufacturer->id ?? '' ?>"/>
 
         <label>Name</label>
-        <input type="text" name="name" value="<?= $manufacturer['name'] ?? '' ?>"/>
+        <input type="text" name="name" value="<?= $manufacturer->name ?? '' ?>"/>
 
         <input type="submit" name="submit" value="Save Manufacturer"/>
     </form>

@@ -55,14 +55,10 @@ class Cars
             $cars = $this->carsTable->find('archived', 'false');
         }
 
-        $allManufacturers = $this->manufacturersTable->findAll();
-        $manufacturers = [];
+        $manufacturers = $this->manufacturersTable->findAll();
 
-        foreach ($allManufacturers as $manufacturer) {
-            $count = $this->carsTable->count('manufacturer_id', $manufacturer['id']);
-            if ($count != 0) {
-                array_push($manufacturers, $manufacturer);
-            }
+        foreach ($cars as $car) {
+            $car->manufacturerName = $this->manufacturersTable->find('id', $car->manufacturer_id)[0]->name;
         }
 
         return [
@@ -98,7 +94,7 @@ class Cars
     {
         if (isset($_GET['id'])) {
             // Earlier price inserted only if it is higher than the current price
-            $_POST['car']['earlier_price'] = $this->carsTable->find('id', $_POST['car']['id'])[0]['price'];
+            $_POST['car']['earlier_price'] = $this->carsTable->find('id', $_POST['car']['id'])[0]->price;
 
             if ($_POST['car']['earlier_price'] <= $_POST['car']['price']) {
                 $_POST['car']['earlier_price'] = NULL;
@@ -136,8 +132,8 @@ class Cars
     {
         $car = $this->carsTable->find('id', $_GET['id'])[0];
         $record = [];
-        $record['id'] = $car['id'];
-        if ($car['archived'] == 'false') {
+        $record['id'] = $car->id;
+        if ($car->archived == 'false') {
             $record['archived'] = 'true';
             header("Location: cars");
         } else {

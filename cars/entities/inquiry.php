@@ -12,16 +12,15 @@ class Inquiry
     public $name;
     public $telephone;
     public $adminId;
-    private $inquiresTable;
+    private $adminsTable;
 
-    public function __construct(DatabaseTable $inquiresTable)
+    public function __construct(DatabaseTable $adminsTable)
     {
-        $this->inquiresTable = $inquiresTable;
+        $this->adminsTable = $adminsTable;
     }
 
-    public function getInquiry()
+    public function getAdmin()
     {
-
+        return $this->adminsTable->find('id', $this->adminId);
     }
-
 }

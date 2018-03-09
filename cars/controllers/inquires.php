@@ -36,7 +36,7 @@ class Inquires
 
         $inquiry = [];
         $inquiry['id'] = $_GET['id'];
-        $inquiry['admin_id'] = $author['id'];
+        $inquiry['admin_id'] = $author->id;
         $inquiry['complete'] = 'true';
 
         $this->inquiresTable->save($inquiry);

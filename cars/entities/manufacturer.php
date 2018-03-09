@@ -8,16 +8,16 @@ class Manufacturer
 {
     public $id;
     public $name;
-    private $manufacturersTable;
+    private $carsTable;
 
-    public function __construct(DatabaseTable $manufacturersTable)
+    public function __construct(DatabaseTable $carsTable)
     {
-        $this->manufacturersTable = $manufacturersTable;
+        $this->carsTable = $carsTable;
     }
 
-    public function getManufacturer()
+    public function getCars()
     {
-
+        return $this->carsTable->find('manufacturer_id', $this->id);
     }
 
 }

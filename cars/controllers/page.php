@@ -21,9 +21,8 @@ class Page
     {
         $news = $this->newsTable->findAll();
 
-        foreach ($news as $key => $element) {
-            $element['author_name'] = $this->adminsTable->find('id', $element['admin_id'])[0]['name'];
-            $news[$key] = $element;
+        foreach ($news as $element) {
+            $element->author_name = $this->adminsTable->find('id', $element->admin_id)[0]->name;
         }
 
         return [
@@ -92,7 +91,7 @@ class Page
     public function news()
     {
         $news = $this->newsTable->find('id', $_GET['id'])[0];
-        $news['author_name'] = $this->adminsTable->find('id', $news['admin_id'])[0]['name'];
+        $news->author_name = $this->adminsTable->find('id', $news->admin_id)[0]->name;
 
         return [
             'template' => 'page/news.html.php',

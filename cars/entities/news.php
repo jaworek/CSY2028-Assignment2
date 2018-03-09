@@ -11,15 +11,15 @@ class News
     public $content;
     public $date;
     public $adminId;
-    private $newsTable;
+    private $adminsTable;
 
-    public function __construct(DatabaseTable $newsTable)
+    public function __construct(DatabaseTable $adminsTable)
     {
-        $this->newsTable = $newsTable;
+        $this->adminsTable = $adminsTable;
     }
 
-    public function getNews()
+    public function getAuthor()
     {
-
+        return $this->adminsTable->find('id', $this->adminId);
     }
 }

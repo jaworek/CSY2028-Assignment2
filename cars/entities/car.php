@@ -17,16 +17,22 @@ class Car
     public $engineType;
     public $productionYear;
     public $adminId;
-    private $carsTable;
+    private $adminsTable;
+    private $manufacturersTable;
 
-    public function __construct(DatabaseTable $carsTable)
+    public function __construct(DatabaseTable $adminsTable, DatabaseTable $manufacturersTable)
     {
-        $this->carsTable = $carsTable;
+        $this->adminsTable = $adminsTable;
+        $this->manufacturersTable = $manufacturersTable;
     }
 
-    public function getCar()
+    public function getAdmin()
     {
-
+        return $this->adminsTable->findById($this->adminId);
     }
 
+    public function getManufacturer()
+    {
+        return $this->manufacturersTable->findById($this->manufacturerId);
+    }
 }

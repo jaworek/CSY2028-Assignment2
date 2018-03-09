@@ -20,10 +20,13 @@ class Authentication
     {
         $user = $this->users->find($this->usernameColumn, strtolower($username));
 
-        if (!empty($user) && password_verify($password, $user[0][$this->passwordColumn])) {
+        $passwordColumn = $this->passwordColumn;
+        $usernameColumn = $this->usernameColumn;
+
+        if (!empty($user) && password_verify($password, $user[0]->$passwordColumn)) {
             session_regenerate_id();
-            $_SESSION['username'] = $user[0][$this->usernameColumn];
-            $_SESSION['password'] = $user[0][$this->passwordColumn];
+            $_SESSION['username'] = $user[0]->$usernameColumn;
+            $_SESSION['password'] = $user[0]->$passwordColumn;
 
             return true;
         }
@@ -39,7 +42,9 @@ class Authentication
 
         $user = $this->users->find($this->usernameColumn, strtolower($_SESSION['username']));
 
-        if (!empty($user) && $user[0][$this->passwordColumn] === $_SESSION['password']) {
+        $passwordColumn = $this->passwordColumn;
+
+        if (!empty($user) && $user[0]->$passwordColumn === $_SESSION['password']) {
             return true;
         }
 

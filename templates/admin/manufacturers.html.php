@@ -16,9 +16,9 @@
 
         <?php foreach ($categories as $category) { ?>
             <tr>
-                <td><?= $category['name'] ?></td>
-                <td><a style="float: right" href="/admin/editmanufacturer?id=<?= $category['id'] ?>">Edit</a></td>
-                <td><a style="float: right" href="/admin/deletemanufacturer?id=<?= $category['id'] ?>">Delete</a></td>
+                <td><?= $category->name ?></td>
+                <td><a style="float: right" href="/admin/editmanufacturer?id=<?= $category->id ?>">Edit</a></td>
+                <td><a style="float: right" href="/admin/deletemanufacturer?id=<?= $category->id ?>">Delete</a></td>
             </tr>
         <?php } ?>
         </thead>

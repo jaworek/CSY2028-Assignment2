@@ -22,6 +22,20 @@ class DatabaseTable
         $this->constructorArgs = $constructorArgs;
     }
 
+    public function findById($value)
+    {
+        $sql = "SELECT * FROM $this->table WHERE $this->primaryKey = :value";
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $record = ['value' => $value];
+
+        $stmt->execute($record);
+        $object = $stmt->fetchObject($this->className, $this->constructorArgs);
+
+        return $object;
+    }
+
     public function find($field, $value)
     {
         $sql = "SELECT * FROM $this->table WHERE $field = :value";
@@ -31,7 +45,7 @@ class DatabaseTable
         $record = ['value' => $value];
 
         $stmt->execute($record);
-        $row = $stmt->fetchAll();
+        $row = $stmt->fetchAll(PDO::FETCH_CLASS, $this->className, $this->constructorArgs);
 
         return $row;
     }
@@ -43,7 +57,7 @@ class DatabaseTable
         $stmt = $this->pdo->prepare($sql);
 
         $stmt->execute();
-        $rows = $stmt->fetchAll();
+        $rows = $stmt->fetchAll(PDO::FETCH_CLASS, $this->className, $this->constructorArgs);
 
         return $rows;
     }
@@ -57,7 +71,6 @@ class DatabaseTable
         $sql = "INSERT INTO $this->table ($fields) VALUES (:$values)";
 
         $stmt = $this->pdo->prepare($sql);
-
         $stmt->execute($record);
     }
 
@@ -72,20 +85,15 @@ class DatabaseTable
         $sql = "UPDATE $this->table SET $fields WHERE $this->primaryKey = :primaryKey";
 
         $record['primaryKey'] = $record[$this->primaryKey];
-
         $stmt = $this->pdo->prepare($sql);
-
         $stmt->execute($record);
     }
 
     public function delete($field, $value)
     {
         $sql = "DELETE FROM $this->table WHERE $field = :value";
-
         $stmt = $this->pdo->prepare($sql);
-
         $record = ['value' => $value];
-
         $stmt->execute($record);
     }
 
@@ -101,9 +109,7 @@ class DatabaseTable
     public function count($field, $value)
     {
         $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM $this->table WHERE $field = :value");
-        $record = [
-            'value' => $value
-        ];
+        $record = ['value' => $value];
         $stmt->execute($record);
         $count = $stmt->fetch();
 
