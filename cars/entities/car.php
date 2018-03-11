@@ -9,16 +9,19 @@ class Car
     public $id;
     public $name;
     public $price;
-    public $earlierPrice;
-    public $manufacturerId;
+    public $earlier_price;
+    public $manufacturer_id;
     public $description;
     public $archived;
     public $mileage;
-    public $engineType;
-    public $productionYear;
-    public $adminId;
+    public $engine_type;
+    public $production_year;
+    public $admin_id;
+
     private $adminsTable;
     private $manufacturersTable;
+    private $admin;
+    private $manufacturer;
 
     public function __construct(DatabaseTable $adminsTable, DatabaseTable $manufacturersTable)
     {
@@ -28,11 +31,19 @@ class Car
 
     public function getAdmin()
     {
-        return $this->adminsTable->findById($this->adminId);
+        if (empty($this->admin)) {
+            $this->admin = $this->adminsTable->findById($this->admin_id);
+        }
+
+        return $this->admin;
     }
 
     public function getManufacturer()
     {
-        return $this->manufacturersTable->findById($this->manufacturerId);
+        if (empty($this->manufacturer)) {
+            $this->manufacturer = $this->manufacturersTable->findById($this->manufacturer_id);
+        }
+
+        return $this->manufacturer;
     }
 }

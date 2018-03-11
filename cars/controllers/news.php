@@ -2,6 +2,7 @@
 
 namespace Cars\Controllers;
 
+use Classes\Authentication;
 use Classes\DatabaseTable;
 use Classes\Images;
 
@@ -9,23 +10,20 @@ class News
 {
     private $newsTable;
     private $adminsTable;
+    private $authentication;
     private $images;
 
-    public function __construct(DatabaseTable $newsTable, DatabaseTable $adminsTable, Images $images)
+    public function __construct(DatabaseTable $newsTable, DatabaseTable $adminsTable, Authentication $authentication, Images $images)
     {
         $this->newsTable = $newsTable;
         $this->adminsTable = $adminsTable;
+        $this->authentication = $authentication;
         $this->images = $images;
     }
 
     public function news()
     {
         $news = $this->newsTable->findAll();
-
-//        foreach ($news as $key => $element) {
-//            $element['author_name'] = $this->adminsTable->find('id', $element['admin_id'])[0]['name'];
-//            $news[$key] = $element;
-//        }
 
         return [
             'template' => 'admin/news.html.php',
@@ -49,7 +47,7 @@ class News
 
     public function saveNews()
     {
-        $_POST['news']['admin_id'] = $_SESSION['id'];
+        $_POST['news']['admin_id'] = $this->authentication->getUser()->id;
 
         $this->newsTable->save($_POST['news']);
         $this->images->uploadImage('news');

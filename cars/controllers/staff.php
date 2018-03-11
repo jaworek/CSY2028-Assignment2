@@ -15,7 +15,7 @@ class Staff
 
     public function staff()
     {
-//        TODO employees without priviliges can access staff page by typing address into the browser
+//        FIXME employees without priviliges can access staff page by typing address into the browser
         $staff = $this->adminsTable->findAll();
 
         return [

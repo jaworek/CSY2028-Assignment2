@@ -11,8 +11,10 @@ class Inquiry
     public $email;
     public $name;
     public $telephone;
-    public $adminId;
+    public $admin_id;
+
     private $adminsTable;
+    private $admin;
 
     public function __construct(DatabaseTable $adminsTable)
     {
@@ -21,6 +23,10 @@ class Inquiry
 
     public function getAdmin()
     {
-        return $this->adminsTable->find('id', $this->adminId);
+        if (empty($this->admin)) {
+            $this->admin = $this->adminsTable->findById($this->admin_id);
+        }
+
+        return $this->admin;
     }
 }

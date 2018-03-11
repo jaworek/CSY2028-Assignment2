@@ -31,7 +31,7 @@
         <label>Category</label>
         <select name="car[manufacturer_id]">
             <?php foreach ($manufacturers as $manufacturer) {
-                if ($car->categoryId == $manufacturer->id) { ?>
+                if ($car->manufacturer_id == $manufacturer->id) { ?>
                     <option selected="selected" value="<?= $manufacturer->id ?>"><?= $manufacturer->name ?></option>
                 <?php } else { ?>
                     <option value="<?= $manufacturer->id ?>"><?= $manufacturer->name ?></option>

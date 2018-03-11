@@ -2,6 +2,7 @@
 
 namespace Cars\Controllers;
 
+use Classes\Authentication;
 use Classes\DatabaseTable;
 use Classes\Images;
 
@@ -9,12 +10,14 @@ class Cars
 {
     private $carsTable;
     private $manufacturersTable;
+    private $authentication;
     private $images;
 
-    public function __construct(DatabaseTable $carsTable, DatabaseTable $manufacturersTable, Images $images)
+    public function __construct(DatabaseTable $carsTable, DatabaseTable $manufacturersTable, Authentication $authentication, Images $images)
     {
         $this->carsTable = $carsTable;
         $this->manufacturersTable = $manufacturersTable;
+        $this->authentication = $authentication;
         $this->images = $images;
     }
 
@@ -50,15 +53,24 @@ class Cars
     {
 //        FIXME archived cars show on the page when they are filtered by manufacturer, also if all cars from specific manufacturer are archived option to filter is still present
         if (isset($_GET['id'])) {
-            $cars = $this->carsTable->find('manufacturer_id', $_GET['id']);
+            $cars2 = $this->carsTable->find('manufacturer_id', $_GET['id']);
+            $cars = [];
+            foreach ($cars2 as $key => $car) {
+                if ($car->archived == 'false') {
+                    $cars[] = $car;
+                }
+            }
         } else {
             $cars = $this->carsTable->find('archived', 'false');
         }
 
-        $manufacturers = $this->manufacturersTable->findAll();
+        $manufacturers2 = $this->manufacturersTable->findAll();
+        $manufacturers = [];
 
-        foreach ($cars as $car) {
-            $car->manufacturerName = $this->manufacturersTable->find('id', $car->manufacturer_id)[0]->name;
+        foreach ($manufacturers2 as $manufacturer) {
+            if ($manufacturer->countCars() != 0) {
+                $manufacturers[] = $manufacturer;
+            }
         }
 
         return [
@@ -101,7 +113,7 @@ class Cars
             }
         }
 
-        $_POST['car']['admin_id'] = $_SESSION['id'];
+        $_POST['car']['admin_id'] = $this->authentication->getUser()->id;
         $this->carsTable->save($_POST['car']);
         $this->images->uploadImage('cars');
 

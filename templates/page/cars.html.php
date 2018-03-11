@@ -6,7 +6,7 @@
         <?php } ?>
 
         <div class="details">
-            <h2><?= $car->manufacturerName, ' ', $car->name ?></h2>
+            <h2><?= $car->getManufacturer()->name, ' ', $car->name ?></h2>
             <h3><?= (empty($car->earlier_price)) ? "£{$car->price}" : "Was £{$car->earlier_price}, now £{$car->price}"; ?></h3>
             <h3>Mileage: <?= $car->mileage ?></h3>
             <h3>Engine type: <?= $car->engine_type ?></h3>

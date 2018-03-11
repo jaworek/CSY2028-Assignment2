@@ -10,8 +10,10 @@ class News
     public $title;
     public $content;
     public $date;
-    public $adminId;
+    public $admin_id;
+
     private $adminsTable;
+    private $author;
 
     public function __construct(DatabaseTable $adminsTable)
     {
@@ -20,6 +22,9 @@ class News
 
     public function getAuthor()
     {
-        return $this->adminsTable->find('id', $this->adminId);
+        if (empty($this->author)) {
+            $this->author = $this->adminsTable->findById($this->admin_id);
+        }
+        return $this->author;
     }
 }

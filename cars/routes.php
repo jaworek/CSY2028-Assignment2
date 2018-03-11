@@ -28,11 +28,11 @@ class Routes implements \Classes\Routes
     {
         require '../database.php';
 
-        $this->carsTable = new DatabaseTable($pdo, 'cars', 'id');
-        $this->manufacturersTable = new DatabaseTable($pdo, 'manufacturers', 'id');
-        $this->inquiresTable = new DatabaseTable($pdo, 'inquiries', 'id');
-        $this->adminsTable = new DatabaseTable($pdo, 'admins', 'id');
-        $this->newsTable = new DatabaseTable($pdo, 'news', 'id');
+        $this->adminsTable = new DatabaseTable($pdo, 'admins', 'id', '\Cars\Entities\Admin', []);
+        $this->manufacturersTable = new DatabaseTable($pdo, 'manufacturers', 'id', '\Cars\Entities\Manufacturer', [&$this->carsTable]);
+        $this->inquiresTable = new DatabaseTable($pdo, 'inquiries', 'id', '\Cars\Entities\Inquiry', [&$this->adminsTable]);
+        $this->newsTable = new DatabaseTable($pdo, 'news', 'id', '\Cars\Entities\News', [&$this->adminsTable]);
+        $this->carsTable = new DatabaseTable($pdo, 'cars', 'id', '\Cars\Entities\Car', [&$this->adminsTable, &$this->manufacturersTable]);
 
         $this->authentication = new Authentication($this->adminsTable, 'email', 'password');
         $this->images = new Images($pdo);
@@ -49,9 +49,9 @@ class Routes implements \Classes\Routes
         $pageController = new Page($this->inquiresTable, $this->newsTable, $this->adminsTable);
         $adminController = new Admin($this->authentication);
         $manufacturersController = new Manufacturers($this->manufacturersTable);
-        $carsController = new Cars($this->carsTable, $this->manufacturersTable, $this->images);
+        $carsController = new Cars($this->carsTable, $this->manufacturersTable, $this->authentication, $this->images);
         $staffController = new Staff($this->adminsTable);
-        $newsController = new News($this->newsTable, $this->adminsTable, $this->images);
+        $newsController = new News($this->newsTable, $this->adminsTable, $this->authentication, $this->images);
         $inquiresController = new Inquires($this->inquiresTable, $this->authentication);
 
         $routes = [

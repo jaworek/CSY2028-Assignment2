@@ -12,6 +12,7 @@
         <tr>
             <th style="width: 10%">Model</th>
             <th style="width: 10%">Price</th>
+            <th style="width: 10%">Added by</th>
             <th style="width: 5%">&nbsp;</th>
             <th style="width: 5%">&nbsp;</th>
             <th style="width: 5%">&nbsp;</th>
@@ -21,6 +22,7 @@
             <tr>
                 <td><?= $car->name ?></td>
                 <td>£<?= $car->price ?></td>
+                <td><?= $car->getAdmin()->name ?></td>
                 <td><a style="float: right"
                        href="/admin/archive?id=<?= $car->id ?>"><?= ($car->archived == 'false') ? 'Archive' : 'Restore'; ?></a>
                 </td>

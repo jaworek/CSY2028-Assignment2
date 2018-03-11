@@ -4,6 +4,7 @@ namespace Classes;
 
 use Exception;
 use PDO;
+use PDOException;
 
 class DatabaseTable
 {
@@ -72,6 +73,8 @@ class DatabaseTable
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($record);
+
+        return $this->pdo->lastInsertId();
     }
 
     private function update($record)
@@ -99,11 +102,26 @@ class DatabaseTable
 
     public function save($record)
     {
+        $entity = new $this->className(...$this->constructorArgs);
+
         try {
-            $this->insert($record);
-        } catch (Exception $e) {
+            if ($record[$this->primaryKey] == '') {
+                $record[$this->primaryKey] = null;
+            }
+            $insertId = $this->insert($record);
+
+            $entity->{$this->primaryKey} = $insertId;
+        } catch (PDOException $e) {
             $this->update($record);
         }
+
+        foreach ($record as $key => $value) {
+            if (!empty($value)) {
+                $entity->$key = $value;
+            }
+        }
+
+        return $entity;
     }
 
     public function count($field, $value)
