@@ -3,6 +3,10 @@
 <section class="right">
     <h2><?= $title ?> Car</h2>
 
+    <?php if ($error) { ?>
+        <p class="error">Error</p>
+    <?php } ?>
+
     <form method="POST" enctype="multipart/form-data">
 
         <input type="hidden" name="car[id]" value="<?= $car->id ?? '' ?>"/>

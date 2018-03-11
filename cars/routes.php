@@ -3,6 +3,7 @@
 namespace Cars;
 
 use Cars\Controllers\Inquires;
+use Cars\Entities\Admin as AdminEntity;
 use Classes\Authentication;
 use Classes\DatabaseTable;
 use Cars\Controllers\Cars;
@@ -41,6 +42,17 @@ class Routes implements \Classes\Routes
     public function getAuthentication(): Authentication
     {
         return $this->authentication;
+    }
+
+    public function checkPermission($permission): bool
+    {
+        $user = $this->authentication->getUser();
+
+        if ($user && $user->hasPermission($permission)) {
+            return true;
+        }
+
+        return false;
     }
 
     public function getRoutes(): array
@@ -124,35 +136,40 @@ class Routes implements \Classes\Routes
                     'controller' => $carsController,
                     'action' => 'cars'
                 ],
-                'login' => true
+                'login' => true,
+                'permissions' => AdminEntity::SHOW_CARS
             ],
             'admin/archivedcars' => [
                 'GET' => [
                     'controller' => $carsController,
                     'action' => 'archivedCars'
                 ],
-                'login' => true
+                'login' => true,
+                'permissions' => AdminEntity::SHOW_CARS
             ],
             'admin/manufacturers' => [
                 'GET' => [
                     'controller' => $manufacturersController,
                     'action' => 'manufacturers'
                 ],
-                'login' => true
+                'login' => true,
+                'permissions' => AdminEntity::SHOW_MANUFACTURERS
             ],
             'admin/inquires' => [
                 'GET' => [
                     'controller' => $inquiresController,
                     'action' => 'inquires'
                 ],
-                'login' => true
+                'login' => true,
+                'permissions' => AdminEntity::SHOW_INQUIRES
             ],
             'admin/archive' => [
                 'GET' => [
                     'controller' => $carsController,
                     'action' => 'archive'
                 ],
-                'login' => true
+                'login' => true,
+                'permissions' => AdminEntity::ARCHIVE_CAR
             ],
             'admin/addcar' => [
                 'GET' => [
@@ -163,7 +180,8 @@ class Routes implements \Classes\Routes
                     'controller' => $carsController,
                     'action' => 'saveCar'
                 ],
-                'login' => true
+                'login' => true,
+                'permissions' => AdminEntity::ADD_CAR
             ],
             'admin/addmanufacturer' => [
                 'GET' => [
@@ -174,7 +192,8 @@ class Routes implements \Classes\Routes
                     'controller' => $manufacturersController,
                     'action' => 'saveManufacturer'
                 ],
-                'login' => true
+                'login' => true,
+                'permissions' => AdminEntity::ADD_MANUFACTURER
             ],
             'admin/editcar' => [
                 'GET' => [
@@ -185,7 +204,8 @@ class Routes implements \Classes\Routes
                     'controller' => $carsController,
                     'action' => 'saveCar'
                 ],
-                'login' => true
+                'login' => true,
+                'permissions' => AdminEntity::EDIT_CAR
             ],
             'admin/editmanufacturer' => [
                 'GET' => [
@@ -196,7 +216,8 @@ class Routes implements \Classes\Routes
                     'controller' => $manufacturersController,
                     'action' => 'saveManufacturer'
                 ],
-                'login' => true
+                'login' => true,
+                'permissions' => AdminEntity::EDIT_MANUFACTURER
             ],
             'admin/deletecar' => [
                 'GET' => [
@@ -207,7 +228,8 @@ class Routes implements \Classes\Routes
                     'controller' => $carsController,
                     'action' => 'processDelete'
                 ],
-                'login' => true
+                'login' => true,
+                'permissions' => AdminEntity::DELETE_CAR
             ],
             'admin/deletemanufacturer' => [
                 'GET' => [
@@ -218,14 +240,16 @@ class Routes implements \Classes\Routes
                     'controller' => $manufacturersController,
                     'action' => 'processDelete'
                 ],
-                'login' => true
+                'login' => true,
+                'permissions' => AdminEntity::DELETE_MANUFACTURER
             ],
             'admin/staff' => [
                 'GET' => [
                     'controller' => $staffController,
                     'action' => 'staff'
                 ],
-                'login' => true
+                'login' => true,
+                'permissions' => AdminEntity::SHOW_STAFF
             ],
             'admin/addstaff' => [
                 'GET' => [
@@ -236,7 +260,8 @@ class Routes implements \Classes\Routes
                     'controller' => $staffController,
                     'action' => 'saveStaff'
                 ],
-                'login' => true
+                'login' => true,
+                'permissions' => AdminEntity::ADD_STAFF
             ],
             'admin/deletestaff' => [
                 'GET' => [
@@ -247,14 +272,16 @@ class Routes implements \Classes\Routes
                     'controller' => $staffController,
                     'action' => 'processDelete'
                 ],
-                'login' => true
+                'login' => true,
+                'permissions' => AdminEntity::DELETE_STAFF
             ],
             'admin/news' => [
                 'GET' => [
                     'controller' => $newsController,
                     'action' => 'news'
                 ],
-                'login' => true
+                'login' => true,
+                'permissions' => AdminEntity::SHOW_NEWS
             ],
             'admin/addnews' => [
                 'GET' => [
@@ -265,7 +292,8 @@ class Routes implements \Classes\Routes
                     'controller' => $newsController,
                     'action' => 'saveNews'
                 ],
-                'login' => true
+                'login' => true,
+                'permissions' => AdminEntity::ADD_NEWS
             ],
             'admin/deletenews' => [
                 'GET' => [
@@ -276,14 +304,16 @@ class Routes implements \Classes\Routes
                     'controller' => $newsController,
                     'action' => 'processDelete'
                 ],
-                'login' => true
+                'login' => true,
+                'permissions' => AdminEntity::DELETE_NEWS
             ],
             'admin/complete' => [
                 'GET' => [
                     'controller' => $inquiresController,
                     'action' => 'complete'
                 ],
-                'login' => true
+                'login' => true,
+                'permissions' => AdminEntity::COMPLETE_INQUIRY
             ]
         ];
 

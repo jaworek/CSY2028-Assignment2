@@ -83,7 +83,7 @@ class Cars
         ];
     }
 
-    public function modifyCar()
+    public function modifyCar($error = false)
     {
         if (isset($_GET['id'])) {
             $car = $this->carsTable->find('id', $_GET['id'])[0];
@@ -97,13 +97,33 @@ class Cars
             'variables' => [
                 'title' => (isset($_GET['id'])) ? 'Edit' : 'Add',
                 'car' => $car ?? '',
-                'manufacturers' => $manufacturers
+                'manufacturers' => $manufacturers,
+                'error' => $error
             ]
         ];
     }
 
     public function saveCar()
     {
+        $error = false;
+        $car = $_POST['car'];
+
+        if (empty($car['name'])) {
+            $error = true;
+        } else if (empty($car['price'])) {
+            $error = true;
+        } else if (empty($car['description'])) {
+            $error = true;
+        } else if (empty($car['mileage'])) {
+            $error = true;
+        } else if (empty($car['production_year'])) {
+            $error = true;
+        }
+
+        if ($error) {
+            return $this->modifyCar($error);
+        }
+
         if (isset($_GET['id'])) {
             // Earlier price inserted only if it is higher than the current price
             $_POST['car']['earlier_price'] = $this->carsTable->find('id', $_POST['car']['id'])[0]->price;

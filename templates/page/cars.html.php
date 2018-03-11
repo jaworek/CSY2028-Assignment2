@@ -2,7 +2,7 @@
 
     <li>
         <?php if (file_exists("images/cars/{$car->id}.jpg")) { ?>
-            <a href="images/cars/<?= $car->id ?>.jpg"><img src="/images/cars/<?= $car->id ?>.jpg"/></a>
+            <img src="/images/cars/<?= $car->id ?>.jpg"/>
         <?php } ?>
 
         <div class="details">

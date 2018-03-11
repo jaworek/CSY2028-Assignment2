@@ -35,18 +35,34 @@ class News
         ];
     }
 
-    public function addNews()
+    public function addNews($error = false)
     {
         return [
             'template' => 'admin/addnews.html.php',
             'title' => 'Admin',
             'class' => 'admin',
-            'variables' => []
+            'variables' => [
+                'error' => $error
+            ]
         ];
     }
 
     public function saveNews()
     {
+        $error = false;
+
+        $news = $_POST['news'];
+
+        if (empty($news['title'])) {
+            $error = true;
+        } else if ($news['content']) {
+            $error = true;
+        }
+
+        if ($error) {
+            return $this->addNews($error);
+        }
+
         $_POST['news']['admin_id'] = $this->authentication->getUser()->id;
 
         $this->newsTable->save($_POST['news']);

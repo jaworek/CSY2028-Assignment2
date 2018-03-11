@@ -20,6 +20,9 @@ class EntryPoint
         if (isset($routes[$route]['login']) && !$authentication->isLoggedIn()) {
             header('Location: /admin/login');
             exit();
+        } else if (isset($routes[$route]['permissions']) && !$this->routes->checkPermission($routes[$route]['permissions'])) {
+            header('Location: /admin/admin');
+            exit();
         }
 
         $controller = $routes[$route][$method]['controller'];
