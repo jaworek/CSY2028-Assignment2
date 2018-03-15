@@ -30,6 +30,20 @@ class Inquires
         ];
     }
 
+    public function completeInquires()
+    {
+        $inquires = $this->inquiresTable->find('admin_id', 6);
+
+        return [
+            'template' => 'admin/inquires.html.php',
+            'title' => 'Admin',
+            'class' => 'admin',
+            'variables' => [
+                'inquires' => $inquires
+            ]
+        ];
+    }
+
     public function complete()
     {
         $author = $this->authentication->getUser();

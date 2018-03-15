@@ -2,11 +2,9 @@
 
 namespace Classes;
 
-use DirectoryIterator;
 use PDO;
 
-class Images
-{
+class Images {
     private $pdo;
 
     public function __construct(PDO $pdo)
@@ -14,46 +12,19 @@ class Images
         $this->pdo = $pdo;
     }
 
-    public function loadBanner()
-    {
-        $files = [];
-        foreach (new DirectoryIterator('./images/banners') as $file) {
-            if ($file->isDot()) {
-                continue;
-            }
-
-            if (!strpos($file->getFileName(), '.jpg')) {
-                continue;
-            }
-
-            $files[] = $file->getFileName();
-        }
-
-        header('content-type: image/jpeg');
-
-        $contents = load_file('./images/banners/' . $files[rand(0, count($files) - 1)]);
-
-        header("Cache-Control: no-store, no-cache, must-revalidate");
-        header("Cache-Control: post-check=0, pre-check=0", false);
-        header("Pragma: no-cache");
-        header('content-length: ' . strlen($contents));
-
-        echo $contents;
-    }
-
-    public function loadFile($name)
-    {
-        //Loads a files contents and returns it
-        ob_start();
-        include($name);
-        $contents = ob_get_clean();
-        return $contents;
-    }
-
+//    pass name of the image as an argument
     public function uploadImage($path)
     {
         if ($_FILES['image']['error'] == 0) {
             $fileName = $this->pdo->lastInsertId() . '.jpg';
+            move_uploaded_file($_FILES['image']['tmp_name'], "images/$path/" . $fileName);
+        }
+    }
+
+    public function uploadImage2($path, $fileName)
+    {
+        if ($_FILES['image']['error'] == 0) {
+            $fileName = $fileName . '.jpg';
             move_uploaded_file($_FILES['image']['tmp_name'], "images/$path/" . $fileName);
         }
     }

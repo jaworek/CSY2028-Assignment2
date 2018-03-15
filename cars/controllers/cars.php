@@ -134,8 +134,11 @@ class Cars
         }
 
         $_POST['car']['admin_id'] = $this->authentication->getUser()->id;
-        $this->carsTable->save($_POST['car']);
+        $id = $this->carsTable->save($_POST['car']);
         $this->images->uploadImage('cars');
+
+        $fileName = $id;
+        $this->images->uploadImage2('cars', $fileName);
 
         header('Location: cars');
     }

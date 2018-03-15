@@ -2,6 +2,7 @@
 
 namespace Cars;
 
+use Cars\Controllers\Banner;
 use Cars\Controllers\Inquires;
 use Cars\Entities\Admin as AdminEntity;
 use Classes\Authentication;
@@ -29,7 +30,7 @@ class Routes implements \Classes\Routes
     {
         require '../database.php';
 
-        $this->adminsTable = new DatabaseTable($pdo, 'admins', 'id', '\Cars\Entities\Admin', []);
+        $this->adminsTable = new DatabaseTable($pdo, 'admins', 'id', '\Cars\Entities\Admin');
         $this->manufacturersTable = new DatabaseTable($pdo, 'manufacturers', 'id', '\Cars\Entities\Manufacturer', [&$this->carsTable]);
         $this->inquiresTable = new DatabaseTable($pdo, 'inquiries', 'id', '\Cars\Entities\Inquiry', [&$this->adminsTable]);
         $this->newsTable = new DatabaseTable($pdo, 'news', 'id', '\Cars\Entities\News', [&$this->adminsTable]);
@@ -65,6 +66,7 @@ class Routes implements \Classes\Routes
         $staffController = new Staff($this->adminsTable);
         $newsController = new News($this->newsTable, $this->adminsTable, $this->authentication, $this->images);
         $inquiresController = new Inquires($this->inquiresTable, $this->authentication);
+        $bannerController = new Banner();
 
         $routes = [
             '' => [
@@ -159,6 +161,14 @@ class Routes implements \Classes\Routes
                 'GET' => [
                     'controller' => $inquiresController,
                     'action' => 'inquires'
+                ],
+                'login' => true,
+                'permissions' => AdminEntity::SHOW_INQUIRES
+            ],
+            'admin/completeinquires' => [
+                'GET' => [
+                    'controller' => $inquiresController,
+                    'action' => 'completeInquires'
                 ],
                 'login' => true,
                 'permissions' => AdminEntity::SHOW_INQUIRES
@@ -314,6 +324,12 @@ class Routes implements \Classes\Routes
                 ],
                 'login' => true,
                 'permissions' => AdminEntity::COMPLETE_INQUIRY
+            ],
+            'images/loadbanner' => [
+                'GET' => [
+                    'controller' => $bannerController,
+                    'action' => 'loadBanner'
+                ]
             ]
         ];
 

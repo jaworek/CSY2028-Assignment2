@@ -1,6 +1,7 @@
 <?php
 
 namespace Classes;
+
 class EntryPoint
 {
     private $routes;

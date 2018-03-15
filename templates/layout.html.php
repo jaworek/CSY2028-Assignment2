@@ -25,7 +25,7 @@
 			<li><a href="/page/careers">Claire’s Careers</a></li>
 		</ul>
 	</nav>
-<img src="/images/randombanner.php"/>
+<img src="/images/loadbanner"/>
 	<main class="<?= $class ?>">
         <?= $output ?>
 	</main>

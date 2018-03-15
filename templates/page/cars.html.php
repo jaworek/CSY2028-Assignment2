@@ -1,9 +1,12 @@
 <?php foreach ($cars as $car) { ?>
 
     <li>
-        <?php if (file_exists("images/cars/{$car->id}.jpg")) { ?>
-            <img src="/images/cars/<?= $car->id ?>.jpg"/>
-        <?php } ?>
+        <?php
+        for ($i = 0; $i < 4; $i++) {
+            if (file_exists("images/cars/{$car->id}.jpg")) { ?>
+                <img src="/images/cars/<?= $car->id ?>.jpg"/>
+            <?php }
+        } ?>
 
         <div class="details">
             <h2><?= $car->getManufacturer()->name, ' ', $car->name ?></h2>
