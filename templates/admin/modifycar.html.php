@@ -44,13 +44,24 @@
         </select>
 
         <!--    Wrong pathway specified (fixed, add note in documentation)   -->
-        <?php if (isset($_GET['id']) && file_exists('images/cars/' . $car->id . '.jpg')) { ?>
-            <label>Current image</label>
-            <img src="../images/cars/<?= $car->id ?>.jpg"/>
-        <?php } ?>
+        <?php for ($i = 1; $i < 5; $i++) {
+            if (isset($_GET['id']) && file_exists("images/cars/" . $car->id . "_$i.jpg")) { ?>
+                <label>Current image <?= $i ?></label>
+                <img src="../images/cars/<?= $car->id . "_" . $i ?>.jpg"/>
+            <?php }
+        } ?>
 
-        <label>Product image</label>
-        <input type="file" name="image"/>
+        <label>Product image 1</label>
+        <input type="file" name="image1"/>
+
+        <label>Product image 2</label>
+        <input type="file" name="image2"/>
+
+        <label>Product image 3</label>
+        <input type="file" name="image3"/>
+
+        <label>Product image 4</label>
+        <input type="file" name="image4"/>
 
         <input type="submit" name="submit" value="Save Product"/>
 

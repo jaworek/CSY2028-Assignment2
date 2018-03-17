@@ -105,9 +105,6 @@ class DatabaseTable
         $entity = new $this->className(...$this->constructorArgs);
 
         try {
-//            if ($record[$this->primaryKey] == '') {
-//                $record[$this->primaryKey] = null;
-//            }
             $insertId = $this->insert($record);
 
             $entity->{$this->primaryKey} = $insertId;
