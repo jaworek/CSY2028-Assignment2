@@ -3,8 +3,13 @@
 <section class="right">
     <h2><?= $title ?> Manufacturer</h2>
 
-    <?php if ($error) { ?>
-        <p class="error">Name cannot be empty</p>
+    <?php if (count($errors) > 0) { ?>
+        <p class="error">Manufacturer could not be added:</p>
+        <ul>
+            <?php foreach ($errors as $error) { ?>
+                <li><?= $error ?></li>
+            <?php } ?>
+        </ul>
     <?php } ?>
 
     <form method="POST">

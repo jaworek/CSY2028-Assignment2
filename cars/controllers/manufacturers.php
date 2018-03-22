@@ -27,7 +27,24 @@ class Manufacturers
         ];
     }
 
-    public function modifyManufacturer($error = false)
+    public function validateManufacturer($manufacturer)
+    {
+        $errors = [];
+
+        if (empty($manufacturer['name'])) {
+            $errors[] = 'Manufacturer name cannot be empty';
+        }
+
+        $exists = $this->manufacturersTable->find('name', $manufacturer['name']);
+
+        if (count($exists) > 0) {
+            $errors[] = 'This name is already in use';
+        }
+
+        return $errors;
+    }
+
+    public function modifyManufacturer($errors = [])
     {
         if (isset($_GET['id'])) {
             $manufacturer = $this->manufacturersTable->find('id', $_GET['id'])[0];
@@ -40,31 +57,28 @@ class Manufacturers
             'variables' => [
                 'title' => (isset($_GET['id'])) ? 'Edit' : 'Add',
                 'manufacturer' => $manufacturer ?? '',
-                'error' => $error
+                'errors' => $errors
             ]
         ];
     }
 
     public function saveManufacturer()
     {
-        $error = false;
         $record['name'] = $_POST['name'];
 
         if (isset($_GET['id'])) {
             $record['id'] = $_GET['id'];
         }
 
-        if (empty($_POST['name'])) {
-            $error = true;
-        }
+        $errors = $this->validateManufacturer($record);
 
-        if (!$error) {
+        if (count($errors) == 0) {
             $this->manufacturersTable->save($record);
             header('Location: manufacturers');
             exit();
         }
 
-        return $this->modifyManufacturer($error);
+        return $this->modifyManufacturer($errors);
     }
 
     public function deleteManufacturer()

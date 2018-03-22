@@ -35,38 +35,50 @@ class News
         ];
     }
 
-    public function addNews($error = false)
+    public function addNews($errors = [])
     {
         return [
             'template' => 'admin/addnews.html.php',
             'title' => 'Admin',
             'class' => 'admin',
             'variables' => [
-                'error' => $error
+                'errors' => $errors
             ]
         ];
     }
 
-    public function saveNews()
+    public function validateNews($news)
     {
-        $error = false;
-
-        $news = $_POST['news'];
+        $errors = [];
 
         if (empty($news['title'])) {
-            $error = true;
-        } else if ($news['content']) {
-            $error = true;
+            $errors[] = 'Title cannot be empty';
+        }
+        if (empty($news['content'])) {
+            $errors[] = 'Content cannot be empty';
         }
 
-        if ($error) {
-            return $this->addNews($error);
+        $exists = $this->newsTable->find('title', $news['title']);
+
+        if (count($exists) > 0) {
+            $errors[] = 'This title is already in use';
+        }
+
+        return $errors;
+    }
+
+    public function saveNews()
+    {
+        $errors = $this->validateNews($_POST['news']);
+
+        if (count($errors) > 0) {
+            return $this->addNews($errors);
         }
 
         $_POST['news']['admin_id'] = $this->authentication->getUser()->id;
 
-        $this->newsTable->save($_POST['news']);
-        $this->images->uploadImage('news');
+        $entity = $this->newsTable->save($_POST['news']);
+        $this->images->uploadImage('news', $entity->id);
 
         header('Location: news');
     }

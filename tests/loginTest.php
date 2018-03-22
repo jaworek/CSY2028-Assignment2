@@ -1,10 +1,11 @@
 <?php
 
-use Cars\Controllers\Staff;
+use Cars\Controllers\Admin;
+use Classes\Authentication;
 use Classes\DatabaseTable;
 use PHPUnit\Framework\Testcase;
 
-class StaffTest extends Testcase
+class LoginTest extends Testcase
 {
     private $controller;
 
@@ -12,6 +13,7 @@ class StaffTest extends Testcase
     {
         $pdo = new PDO('mysql:dbname=cars; host=127.0.0.1', 'student', 'student');
         $adminsTable = new DatabaseTable($pdo, 'admin', 'id');
-        $this->controller = new Staff($adminsTable);
+        $authentication = $this->createMock(Authentication::class);
+        $this->controller = new Admin($adminsTable);
     }
 }
