@@ -37,7 +37,7 @@ class Routes implements \Classes\Routes
         $this->carsTable = new DatabaseTable($pdo, 'cars', 'id', '\Cars\Entities\Car', [&$this->adminsTable, &$this->manufacturersTable]);
 
         $this->authentication = new Authentication($this->adminsTable, 'email', 'password');
-        $this->images = new Images($pdo);
+        $this->images = new Images();
     }
 
     public function getAuthentication(): Authentication
