@@ -16,4 +16,9 @@ class InquiryTest extends Testcase
         $authentication = $this->createMock(Authentication::class);
         $this->controller = new Inquires($inquiresTable, $authentication);
     }
+
+    public function testCompleteSubmit()
+    {
+
+    }
 }

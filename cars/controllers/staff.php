@@ -40,6 +40,11 @@ class Staff
         ];
     }
 
+    public function validateStaff()
+    {
+
+    }
+
     public function saveStaff()
     {
         $staff = $_POST['staff'];

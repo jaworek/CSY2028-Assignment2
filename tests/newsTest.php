@@ -32,17 +32,17 @@ class NewsTest extends Testcase
         $this->assertEquals(count($errors), 1);
     }
 
-//    public function testWhitespaceTitle()
-//    {
-//        $news = [
-//            'title' => ' ',
-//            'content' => 'Bob is a fat hamster.'
-//        ];
-//
-//        $errors = $this->controller->validateNews($news);
-//
-//        $this->assertEquals(count($errors), 1);
-//    }
+    public function testWhitespaceTitle()
+    {
+        $news = [
+            'title' => ' ',
+            'content' => 'Bob is a fat hamster.'
+        ];
+
+        $errors = $this->controller->validateNews($news);
+
+        $this->assertEquals(count($errors), 1);
+    }
 
     public function testEmptyContent()
     {
@@ -80,8 +80,15 @@ class NewsTest extends Testcase
         $this->assertEquals(count($errors), 1);
     }
 
-//    public function testValidNews()
-//    {
-//
-//    }
+    public function testValidNews()
+    {
+        $news = [
+            'title' => 'TestTitle',
+            'content' => 'Bob is a fat hamster.'
+        ];
+
+        $errors = $this->controller->validateNews($news);
+
+        $this->assertEquals(count($errors), 0);
+    }
 }

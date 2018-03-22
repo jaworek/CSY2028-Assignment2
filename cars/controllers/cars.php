@@ -83,7 +83,7 @@ class Cars
         ];
     }
 
-    public function modifyCar($error = false)
+    public function modifyCar($errors = [])
     {
         if (isset($_GET['id'])) {
             $car = $this->carsTable->find('id', $_GET['id'])[0];
@@ -98,32 +98,36 @@ class Cars
                 'title' => (isset($_GET['id'])) ? 'Edit' : 'Add',
                 'car' => $car ?? '',
                 'manufacturers' => $manufacturers,
-                'error' => $error
+                'errors' => $errors
             ]
         ];
     }
 
-    public function saveCar()
+    public function validateCar($car)
     {
-        $error = false;
-        $car = $_POST['car'];
+        $errors = [];
 
         if (empty($car['name'])) {
             $error = true;
-        } else if (empty($car['price'])) {
+        }
+        if (empty($car['price'])) {
             $error = true;
-        } else if (empty($car['description'])) {
+        }
+        if (empty($car['description'])) {
             $error = true;
-        } else if (empty($car['mileage'])) {
+        }
+        if (empty($car['mileage'])) {
             $error = true;
-        } else if (empty($car['production_year'])) {
+        }
+        if (empty($car['production_year'])) {
             $error = true;
         }
 
-        if ($error) {
-            return $this->modifyCar($error);
-        }
+        return $errors;
+    }
 
+    public function saveCar()
+    {
         if (isset($_GET['id'])) {
             // Earlier price inserted only if it is higher than the current price
             $_POST['car']['earlier_price'] = $this->carsTable->find('id', $_POST['car']['id'])[0]->price;
@@ -133,12 +137,18 @@ class Cars
             }
         }
 
-        $_POST['car']['admin_id'] = $this->authentication->getUser()->id;
-        $entity = $this->carsTable->save($_POST['car']);
+        $errors = $this->validateCar($_POST['car']);
 
-        $this->images->uploadImage('cars', $entity->id);
+        if (count($errors) == 0) {
+            $_POST['car']['admin_id'] = $this->authentication->getUser()->id;
+            $entity = $this->carsTable->save($_POST['car']);
+            $this->images->uploadImage('cars', $entity->id);
+            header('Location: cars');
+            exit();
+        }
 
-        header('Location: cars');
+
+        return $this->modifyCar($errors);
     }
 
     public function deleteCar()

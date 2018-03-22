@@ -14,6 +14,31 @@ class LoginTest extends Testcase
         $pdo = new PDO('mysql:dbname=cars; host=127.0.0.1', 'student', 'student');
         $adminsTable = new DatabaseTable($pdo, 'admin', 'id');
         $authentication = $this->createMock(Authentication::class);
-        $this->controller = new Admin($adminsTable);
+        $this->controller = new Admin($authentication);
+    }
+
+    public function testEmptyLogin()
+    {
+
+    }
+
+    public function testEmptyPassword()
+    {
+
+    }
+
+    public function testEmptyEverything()
+    {
+
+    }
+
+    public function testIncorrectLogin()
+    {
+
+    }
+
+    public function testIncorrectPassword()
+    {
+
     }
 }

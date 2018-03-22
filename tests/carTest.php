@@ -19,4 +19,54 @@ class CarTest extends Testcase
         $images = new Images();
         $this->controller = new Cars($carsTable, $manufacturersTable, $authentication, $images);
     }
+
+    public function testEmptyModel()
+    {
+
+    }
+
+    public function testEmptyDescription()
+    {
+
+    }
+
+    public function testEmptyPrice()
+    {
+
+    }
+
+    public function testPriceNaN()
+    {
+
+    }
+
+    public function testEmptyMileage()
+    {
+        
+    }
+
+    public function testMileageNaN()
+    {
+
+    }
+
+    public function testEmptyYear()
+    {
+        
+    }
+
+    public function testYearNaN()
+    {
+
+    }
+
+    public function testEmptyEverything()
+    {
+        
+    }
+
+    public function testValidCar()
+    {
+
+    }
 }

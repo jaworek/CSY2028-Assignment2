@@ -14,4 +14,44 @@ class StaffTest extends Testcase
         $adminsTable = new DatabaseTable($pdo, 'admin', 'id');
         $this->controller = new Staff($adminsTable);
     }
+
+    public function testEmptyEmail()
+    {
+
+    }
+
+    public function testNotValidEmail()
+    {
+
+    }
+
+    public function testEmptyPassword()
+    {
+        
+    }
+
+    public function testEmptyPasswordRepeat()
+    {
+
+    }
+
+    public function testEmptyName()
+    {
+
+    }
+
+    public function testEmptyEverything()
+    {
+
+    }
+
+    public function testPasswordsNotMatching()
+    {
+
+    }
+
+    public function testValidDetails()
+    {
+
+    }
 }

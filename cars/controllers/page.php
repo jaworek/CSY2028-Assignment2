@@ -51,6 +51,13 @@ class Page
         ];
     }
 
+    public function validateInquiry($inquiry)
+    {
+        $errors = [];
+
+        return $errors;
+    }
+
     public function sendInquiry()
     {
         $contact = $_POST['contact'];
