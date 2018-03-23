@@ -59,13 +59,13 @@ class Routes implements \Classes\Routes
     public function getRoutes(): array
     {
         // controllers
-        $pageController = new Page($this->inquiresTable, $this->newsTable, $this->adminsTable);
-        $adminController = new Admin($this->authentication);
-        $manufacturersController = new Manufacturers($this->manufacturersTable);
-        $carsController = new Cars($this->carsTable, $this->manufacturersTable, $this->authentication, $this->images);
-        $staffController = new Staff($this->adminsTable);
-        $newsController = new News($this->newsTable, $this->adminsTable, $this->authentication, $this->images);
-        $inquiresController = new Inquires($this->inquiresTable, $this->authentication);
+        $pageController = new Page($this->inquiresTable, $this->newsTable, $this->adminsTable, $_GET, $_POST);
+        $adminController = new Admin($this->authentication, $_POST);
+        $manufacturersController = new Manufacturers($this->manufacturersTable, $_GET, $_POST);
+        $carsController = new Cars($this->carsTable, $this->manufacturersTable, $this->authentication, $this->images, $_GET, $_POST);
+        $staffController = new Staff($this->adminsTable, $_GET, $_POST);
+        $newsController = new News($this->newsTable, $this->adminsTable, $this->authentication, $this->images, $_GET, $_POST);
+        $inquiresController = new Inquires($this->inquiresTable, $this->authentication, $_GET);
         $bannerController = new Banner();
 
         $routes = [

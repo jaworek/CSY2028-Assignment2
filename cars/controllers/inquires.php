@@ -9,16 +9,18 @@ class Inquires
 {
     private $inquiresTable;
     private $authentication;
+    private $get;
 
-    public function __construct(DatabaseTable $inquiresTable, Authentication $authentication)
+    public function __construct(DatabaseTable $inquiresTable, Authentication $authentication, $get)
     {
         $this->inquiresTable = $inquiresTable;
         $this->authentication = $authentication;
+        $this->get = $get;
     }
 
     public function inquires()
     {
-        $inquires = $this->inquiresTable->findAll();
+        $inquires = $this->inquiresTable->find('complete', 'false');
 
         return [
             'template' => 'admin/inquires.html.php',
@@ -32,7 +34,7 @@ class Inquires
 
     public function completeInquires()
     {
-        $inquires = $this->inquiresTable->find('admin_id', 6);
+        $inquires = $this->inquiresTable->find('complete', 'true');
 
         return [
             'template' => 'admin/inquires.html.php',
@@ -49,7 +51,7 @@ class Inquires
         $author = $this->authentication->getUser();
 
         $inquiry = [];
-        $inquiry['id'] = $_GET['id'];
+        $inquiry['id'] = $this->get['id'];
         $inquiry['admin_id'] = $author->id;
         $inquiry['complete'] = 'true';
 

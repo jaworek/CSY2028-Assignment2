@@ -7,10 +7,14 @@ use Classes\DatabaseTable;
 class Manufacturers
 {
     private $manufacturersTable;
+    private $get;
+    private $post;
 
-    public function __construct(DatabaseTable $manufacturersTable)
+    public function __construct(DatabaseTable $manufacturersTable, array $get, array $post)
     {
         $this->manufacturersTable = $manufacturersTable;
+        $this->get = $get;
+        $this->post = $post;
     }
 
     public function manufacturers()
@@ -33,6 +37,8 @@ class Manufacturers
 
         if (empty($manufacturer['name'])) {
             $errors[] = 'Manufacturer name cannot be empty';
+        } else if (preg_match('/^\s+$/', $manufacturer['name'])) {
+            $errors[] = 'Manufacturer name cannot contain only whitespace';
         }
 
         $exists = $this->manufacturersTable->find('name', $manufacturer['name']);
@@ -46,8 +52,8 @@ class Manufacturers
 
     public function modifyManufacturer($errors = [])
     {
-        if (isset($_GET['id'])) {
-            $manufacturer = $this->manufacturersTable->find('id', $_GET['id'])[0];
+        if (isset($this->get['id'])) {
+            $manufacturer = $this->manufacturersTable->find('id', $this->get['id'])[0];
         }
 
         return [
@@ -55,7 +61,7 @@ class Manufacturers
             'title' => 'Admin',
             'class' => 'admin',
             'variables' => [
-                'title' => (isset($_GET['id'])) ? 'Edit' : 'Add',
+                'title' => (isset($this->get['id'])) ? 'Edit' : 'Add',
                 'manufacturer' => $manufacturer ?? '',
                 'errors' => $errors
             ]
@@ -64,10 +70,10 @@ class Manufacturers
 
     public function saveManufacturer()
     {
-        $record['name'] = $_POST['name'];
+        $record['name'] = $this->post['name'];
 
-        if (isset($_GET['id'])) {
-            $record['id'] = $_GET['id'];
+        if (isset($this->get['id'])) {
+            $record['id'] = $this->get['id'];
         }
 
         $errors = $this->validateManufacturer($record);
@@ -89,14 +95,14 @@ class Manufacturers
             'class' => 'admin',
             'variables' => [
                 'title' => 'manufacturer',
-                'id' => $_GET['id']
+                'id' => $this->get['id']
             ]
         ];
     }
 
     public function processDelete()
     {
-        $this->manufacturersTable->delete('id', $_GET['id']);
+        $this->manufacturersTable->delete('id', $this->get['id']);
         header('Location: manufacturers');
     }
 }

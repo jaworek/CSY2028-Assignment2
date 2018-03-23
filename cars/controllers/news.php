@@ -12,13 +12,17 @@ class News
     private $adminsTable;
     private $authentication;
     private $images;
+    private $get;
+    private $post;
 
-    public function __construct(DatabaseTable $newsTable, DatabaseTable $adminsTable, Authentication $authentication, Images $images)
+    public function __construct(DatabaseTable $newsTable, DatabaseTable $adminsTable, Authentication $authentication, Images $images, array $get, array $post)
     {
         $this->newsTable = $newsTable;
         $this->adminsTable = $adminsTable;
         $this->authentication = $authentication;
         $this->images = $images;
+        $this->get = $get;
+        $this->post = $post;
     }
 
     public function news()
@@ -54,8 +58,14 @@ class News
         if (empty($news['title'])) {
             $errors[] = 'Title cannot be empty';
         }
+        else if (preg_match('/^\s+$/', $news['title'])) {
+            $errors[] = 'Title cannot contain only whitespace';
+        }
         if (empty($news['content'])) {
             $errors[] = 'Content cannot be empty';
+        }
+        else if (preg_match('/^\s+$/', $news['content'])) {
+            $errors[] = 'Content cannot only whitespace';
         }
 
         $exists = $this->newsTable->find('title', $news['title']);
@@ -69,15 +79,15 @@ class News
 
     public function saveNews()
     {
-        $errors = $this->validateNews($_POST['news']);
+        $errors = $this->validateNews($this->post['news']);
 
         if (count($errors) > 0) {
             return $this->addNews($errors);
         }
 
-        $_POST['news']['admin_id'] = $this->authentication->getUser()->id;
+        $this->post['news']['admin_id'] = $this->authentication->getUser()->id;
 
-        $entity = $this->newsTable->save($_POST['news']);
+        $entity = $this->newsTable->save($this->post['news']);
         $this->images->uploadImage('news', $entity->id);
 
         header('Location: news');
@@ -96,14 +106,14 @@ class News
             'class' => 'admin',
             'variables' => [
                 'title' => 'news',
-                'id' => $_GET['id']
+                'id' => $this->get['id']
             ]
         ];
     }
 
     public function processDelete()
     {
-        $this->newsTable->delete('id', $_GET['id']);
+        $this->newsTable->delete('id', $this->get['id']);
         header('Location: news');
     }
 }

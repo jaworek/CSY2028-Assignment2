@@ -9,12 +9,16 @@ class Page
     private $inquiresTable;
     private $newsTable;
     private $adminsTable;
+    private $get;
+    private $post;
 
-    public function __construct(DatabaseTable $inquiresTable, DatabaseTable $newsTable, DatabaseTable $adminsTable)
+    public function __construct(DatabaseTable $inquiresTable, DatabaseTable $newsTable, DatabaseTable $adminsTable, array $get, array $post)
     {
         $this->inquiresTable = $inquiresTable;
         $this->newsTable = $newsTable;
         $this->adminsTable = $adminsTable;
+        $this->get = $get;
+        $this->post = $post;
     }
 
     public function home()
@@ -39,14 +43,13 @@ class Page
         ];
     }
 
-    public function contact($error = [], $message = false)
+    public function contact($errors = [])
     {
         return [
             'template' => 'page/contact.html.php',
             'title' => 'Contact us',
             'variables' => [
-                'error' => $error,
-                'message' => $message
+                'errors' => $errors,
             ]
         ];
     }
@@ -55,31 +58,33 @@ class Page
     {
         $errors = [];
 
+        if (empty($inquiry['name'])) {
+            $errors[] = 'Name cannot be empty';
+        }
+        if (empty($inquiry['email'])) {
+            $errors[] = 'Email cannot be empty';
+        } else if (!filter_var($inquiry['email'], FILTER_VALIDATE_EMAIL)) {
+            $errors[] = 'Email is not valid';
+        }
+        if (empty($inquiry['telephone'])) {
+            $errors[] = 'Telephone cannot be empty';
+        }
+        if (empty($inquiry['message'])) {
+            $errors[] = 'Message cannot be empty';
+        }
+
         return $errors;
     }
 
     public function sendInquiry()
     {
-        $contact = $_POST['contact'];
-        $error = [];
-        $message = false;
+        $errors = $this->validateInquiry($this->post['contact']);
 
-        if (empty($contact['name'])) {
-            $error['name'] = true;
-        } else if (empty($contact['email'])) {
-            $error['empty_email'] = true;
-        } else if (!filter_var($contact['email'], FILTER_VALIDATE_EMAIL)) {
-            $error['wrong_email'] = true;
-        } else if (empty($contact['telephone'])) {
-            $error['telephone'] = true;
-        } else if (empty($contact['message'])) {
-            $error['message'] = true;
-        } else {
-            $message = true;
-            $this->inquiresTable->save($_POST['contact']);
+        if (count($errors) == 0) {
+            $this->inquiresTable->save($this->post['contact']);
         }
 
-        return $this->contact($error, $message);
+        return $this->contact($errors);
     }
 
     public function careers()
@@ -93,7 +98,7 @@ class Page
 
     public function news()
     {
-        $news = $this->newsTable->find('id', $_GET['id'])[0];
+        $news = $this->newsTable->find('id', $this->get['id'])[0];
 
         return [
             'template' => 'page/news.html.php',

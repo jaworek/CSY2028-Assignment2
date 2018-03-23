@@ -1,10 +1,13 @@
 <section class="right">
     <h2>Log in</h2>
 
-    <?php if ($error) { ?>
-        <div class="error">
-            Could not login
-        </div>
+    <?php if (count($errors) > 0) { ?>
+        <p class="error">Could not login:</p>
+        <ul>
+            <?php foreach ($errors as $error) { ?>
+                <li><?= $error ?></li>
+            <?php } ?>
+        </ul>
     <?php } ?>
 
     <form method="post" style="padding: 40px">

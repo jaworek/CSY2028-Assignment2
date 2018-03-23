@@ -17,7 +17,7 @@ class NewsTest extends Testcase
         $adminsTable = new DatabaseTable($pdo, 'admin', 'id');
         $authentication = $this->createMock(Authentication::class);
         $images = new Images();
-        $this->controller = new News($newsTable, $adminsTable, $authentication, $images);
+        $this->controller = new News($newsTable, $adminsTable, $authentication, $images, [], []);
     }
 
     public function testEmptyTitle()
@@ -49,6 +49,18 @@ class NewsTest extends Testcase
         $news = [
             'title' => 'TestTitle',
             'content' => ''
+        ];
+
+        $errors = $this->controller->validateNews($news);
+
+        $this->assertEquals(count($errors), 1);
+    }
+
+    public function testWhitespaceContent()
+    {
+        $news = [
+            'title' => 'TestTitle',
+            'content' => ' '
         ];
 
         $errors = $this->controller->validateNews($news);

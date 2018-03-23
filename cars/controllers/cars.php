@@ -12,13 +12,17 @@ class Cars
     private $manufacturersTable;
     private $authentication;
     private $images;
+    private $get;
+    private $post;
 
-    public function __construct(DatabaseTable $carsTable, DatabaseTable $manufacturersTable, Authentication $authentication, Images $images)
+    public function __construct(DatabaseTable $carsTable, DatabaseTable $manufacturersTable, Authentication $authentication, Images $images, array $get, array $post)
     {
         $this->carsTable = $carsTable;
         $this->manufacturersTable = $manufacturersTable;
         $this->authentication = $authentication;
         $this->images = $images;
+        $this->get = $get;
+        $this->post = $post;
     }
 
     public function cars()
@@ -52,8 +56,8 @@ class Cars
     public function showroom()
     {
 //        FIXME archived cars show on the page when they are filtered by manufacturer, also if all cars from specific manufacturer are archived option to filter is still present
-        if (isset($_GET['id'])) {
-            $cars2 = $this->carsTable->find('manufacturer_id', $_GET['id']);
+        if (isset($this->get['id'])) {
+            $cars2 = $this->carsTable->find('manufacturer_id', $this->get['id']);
             $cars = [];
             foreach ($cars2 as $key => $car) {
                 if ($car->archived == 'false') {
@@ -85,8 +89,8 @@ class Cars
 
     public function modifyCar($errors = [])
     {
-        if (isset($_GET['id'])) {
-            $car = $this->carsTable->find('id', $_GET['id'])[0];
+        if (isset($this->get['id'])) {
+            $car = $this->carsTable->find('id', $this->get['id'])[0];
         }
         $manufacturers = $this->manufacturersTable->findAll();
 
@@ -95,7 +99,7 @@ class Cars
             'title' => 'Admin',
             'class' => 'admin',
             'variables' => [
-                'title' => (isset($_GET['id'])) ? 'Edit' : 'Add',
+                'title' => (isset($this->get['id'])) ? 'Edit' : 'Add',
                 'car' => $car ?? '',
                 'manufacturers' => $manufacturers,
                 'errors' => $errors
@@ -108,19 +112,19 @@ class Cars
         $errors = [];
 
         if (empty($car['name'])) {
-            $error = true;
+            $errors[] = 'Model name cannot be empty';
         }
         if (empty($car['price'])) {
-            $error = true;
+            $errors[] = 'Price cannot be empty';
         }
         if (empty($car['description'])) {
-            $error = true;
+            $errors[] = 'Description cannot be empty';
         }
         if (empty($car['mileage'])) {
-            $error = true;
+            $errors[] = 'Mileage cannot be empty';
         }
         if (empty($car['production_year'])) {
-            $error = true;
+            $errors[] = 'Production year cannot be empty';
         }
 
         return $errors;
@@ -128,20 +132,20 @@ class Cars
 
     public function saveCar()
     {
-        if (isset($_GET['id'])) {
+        if (isset($this->get['id'])) {
             // Earlier price inserted only if it is higher than the current price
-            $_POST['car']['earlier_price'] = $this->carsTable->find('id', $_POST['car']['id'])[0]->price;
+            $this->post['car']['earlier_price'] = $this->carsTable->find('id', $this->post['car']['id'])[0]->price;
 
-            if ($_POST['car']['earlier_price'] <= $_POST['car']['price']) {
-                $_POST['car']['earlier_price'] = NULL;
+            if ($this->post['car']['earlier_price'] <= $this->post['car']['price']) {
+                $this->post['car']['earlier_price'] = NULL;
             }
         }
 
-        $errors = $this->validateCar($_POST['car']);
+        $errors = $this->validateCar($this->post['car']);
 
         if (count($errors) == 0) {
-            $_POST['car']['admin_id'] = $this->authentication->getUser()->id;
-            $entity = $this->carsTable->save($_POST['car']);
+            $this->post['car']['admin_id'] = $this->authentication->getUser()->id;
+            $entity = $this->carsTable->save($this->post['car']);
             $this->images->uploadImage('cars', $entity->id);
             header('Location: cars');
             exit();
@@ -159,21 +163,21 @@ class Cars
             'class' => 'admin',
             'variables' => [
                 'title' => 'car',
-                'id' => $_GET['id']
+                'id' => $this->get['id']
             ]
         ];
     }
 
     public function processDelete()
     {
-        $this->carsTable->delete('id', $_GET['id']);
+        $this->carsTable->delete('id', $this->get['id']);
         header('Location: cars');
     }
 
     //    Ask Tom if there is a way to remove number keys from array - can be fixed by using PDO::FETCH_COLUMN
     public function archive()
     {
-        $car = $this->carsTable->find('id', $_GET['id'])[0];
+        $car = $this->carsTable->find('id', $this->get['id'])[0];
         $record = [];
         $record['id'] = $car->id;
         if ($car->archived == 'false') {

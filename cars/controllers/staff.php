@@ -7,10 +7,14 @@ use Classes\DatabaseTable;
 class Staff
 {
     private $adminsTable;
+    private $get;
+    private $post;
 
-    public function __construct(DatabaseTable $adminsTable)
+    public function __construct(DatabaseTable $adminsTable, array $get, array $post)
     {
         $this->adminsTable = $adminsTable;
+        $this->get = $get;
+        $this->post = $post;
     }
 
     public function staff()
@@ -28,51 +32,53 @@ class Staff
         ];
     }
 
-    public function addStaff($error = false)
+    public function addStaff($errors = [])
     {
         return [
             'template' => 'admin/addstaff.html.php',
             'title' => 'Admin',
             'class' => 'admin',
             'variables' => [
-                'error' => $error
+                'errors' => $errors
             ]
         ];
     }
 
-    public function validateStaff()
+    public function validateStaff($staff)
     {
+        $errors = [];
 
+        if (empty($staff['email'])) {
+            $errors[] = 'Email cannot be empty';
+        } else if (!filter_var($staff['email'], FILTER_VALIDATE_EMAIL)) {
+            $errors[] = 'Email is not valid';
+        }
+
+        if (empty($staff['password']) || empty($staff['password2'])) {
+            $errors[] = 'Passwords cannot be empty';
+        } else if ($staff['password'] !== $staff['password2']) {
+            $errors[] = 'Passwords do not match';
+        }
+
+        if (empty($staff['name'])) {
+            $errors[] = 'Name cannot be empty';
+        }
+
+        return $errors;
     }
 
     public function saveStaff()
     {
-        $staff = $_POST['staff'];
+        $errors = $this->validateStaff($this->post['staff']);
 
-        $password = $staff['password'];
-        $password2 = $_POST['password2'];
-
-        $error = false;
-
-        if (empty($staff['email'])) {
-            $error = true;
-        } else if (!filter_var($staff['email'], FILTER_VALIDATE_EMAIL)) {
-            $error = true;
-        } else if (empty($password) || empty($password2)) {
-            $error = true;
-        } else if (empty($staff['name'])) {
-            $error = true;
-        } else if ($password !== $password2) {
-            $error = true;
+        if (count($errors) == 0) {
+            $this->post['staff']['password'] = password_hash($this->post['staff']['password'], PASSWORD_DEFAULT);
+            $this->adminsTable->save($this->post['staff']);
+            header('Location: staff');
         }
 
-        if ($error) {
-            return $this->addStaff($error);
-        }
+        return $this->addStaff($errors);
 
-        $staff['password'] = password_hash($password, PASSWORD_DEFAULT);
-        $this->adminsTable->save($staff);
-        header('Location: staff');
 
     }
 
@@ -89,14 +95,14 @@ class Staff
             'class' => 'admin',
             'variables' => [
                 'title' => 'staff',
-                'id' => $_GET['id']
+                'id' => $this->get['id']
             ]
         ];
     }
 
     public function processDelete()
     {
-        $this->adminsTable->delete('id', $_GET['id']);
+        $this->adminsTable->delete('id', $this->get['id']);
         header('Location: staff');
     }
 }

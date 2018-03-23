@@ -13,7 +13,7 @@ class ManufacturerTest extends Testcase
     {
         $pdo = new PDO('mysql:dbname=cars; host=127.0.0.1', 'student', 'student');
         $manufacturersTable = new DatabaseTable($pdo, 'manufacturers', 'id');
-        $this->controller = new Manufacturers($manufacturersTable);
+        $this->controller = new Manufacturers($manufacturersTable, [], []);
     }
 
     public function testEmptyManufacturer()
@@ -27,7 +27,18 @@ class ManufacturerTest extends Testcase
         $this->assertEquals(count($errors), 1);
     }
 
-    public function testExistingManufacturer()
+    public function testWhitespaceManufacturer()
+    {
+        $manufacturer = [
+            'name' => ' '
+        ];
+
+        $errors = $this->controller->validateManufacturer($manufacturer);
+
+        $this->assertEquals(count($errors), 1);
+    }
+
+    public function testManufacturerExists()
     {
         $manufacturer = [
             'name' => 'Jaguar'
@@ -47,5 +58,17 @@ class ManufacturerTest extends Testcase
         $errors = $this->controller->validateManufacturer($manufacturer);
 
         $this->assertEquals(count($errors), 0);
+    }
+
+    public function testSubmitManufacturer()
+    {
+
+    }
+
+    public function testDeleteManufacturer()
+    {
+        $manufacturer = [
+            'name' => 'TestManufacturer'
+        ];
     }
 }

@@ -7,10 +7,12 @@ use Classes\Authentication;
 class Admin
 {
     private $authentication;
+    private $post;
 
-    public function __construct(Authentication $authentication)
+    public function __construct(Authentication $authentication, array $post)
     {
         $this->authentication = $authentication;
+        $this->post = $post;
     }
 
     public function admin()
@@ -23,21 +25,21 @@ class Admin
         ];
     }
 
-    public function login($error = false)
+    public function login($errors = [])
     {
         return [
             'template' => 'admin/login.html.php',
             'title' => 'Login to admin account',
             'class' => 'admin',
             'variables' => [
-                'error' => $error
+                'errors' => $errors
             ]
         ];
     }
 
     public function processLogin()
     {
-        if ($this->authentication->login($_POST['email'], $_POST['password'])) {
+        if ($this->authentication->login($this->post['email'], $this->post['password'])) {
             header('Location: admin');
             exit();
         }
