@@ -20,7 +20,7 @@
         <input name="staff[password]" type="password">
 
         <label>Repeat password</label>
-        <input name="password2" type="password">
+        <input name="staff[password2]" type="password">
 
         <label>Name</label>
         <input name="staff[name]" type="text">

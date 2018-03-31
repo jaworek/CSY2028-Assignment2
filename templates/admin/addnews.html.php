@@ -20,7 +20,7 @@
         <textarea name="news[content]"></textarea>
 
         <label>Image</label>
-        <input type="file" name="image"/>
+        <input type="file" name="image1"/>
 
         <input type="submit" name="submit" value="Submit">
     </form>

@@ -5,4 +5,10 @@
             <directory>tests</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory>cars/controllers</directory>
+            <directory>classes</directory>
+        </whitelist>
+    </filter>
 </phpunit>

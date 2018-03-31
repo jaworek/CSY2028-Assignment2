@@ -44,8 +44,8 @@ class Admin
             exit();
         }
 
-        $error = true;
-        return $this->login($error);
+        $errors[] = 'Wrong login or password';
+        return $this->login($errors);
     }
 
     public function logout()

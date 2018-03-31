@@ -9,15 +9,19 @@ use PHPUnit\Framework\Testcase;
 class CarTest extends Testcase
 {
     private $controller;
+    private $carsTable;
+    private $manufacturersTable;
+    private $authentication;
+    private $images;
 
     public function setUp()
     {
         $pdo = new PDO('mysql:dbname=cars; host=127.0.0.1', 'student', 'student');
-        $carsTable = new DatabaseTable($pdo, 'cars', 'id');
-        $manufacturersTable = new DatabaseTable($pdo, 'manufacturers', 'id');
-        $authentication = $this->createMock(Authentication::class);
-        $images = new Images();
-        $this->controller = new Cars($carsTable, $manufacturersTable, $authentication, $images, [], []);
+        $this->carsTable = new DatabaseTable($pdo, 'cars', 'id');
+        $this->manufacturersTable = new DatabaseTable($pdo, 'manufacturers', 'id');
+        $this->authentication = $this->createMock(Authentication::class);
+        $this->images = new Images();
+        $this->controller = new Cars($this->carsTable, $this->manufacturersTable, $this->authentication, $this->images, [], []);
     }
 
     public function testEmptyModel()
@@ -226,6 +230,23 @@ class CarTest extends Testcase
 
     public function testSubmitCar()
     {
+        $car = [
+            'name' => 'testCar',
+            'price' => '12500',
+            'earlier_price' => '14000',
+            'manufacturer_id' => '3',
+            'description' => 'Very nice car for young lady!',
+            'archived' => 'false',
+            'mileage' => '5000',
+            'engine_type' => 'Diesel',
+            'production_year' => '2010',
+            'admin_id' => '6'
+        ];
+
+//        $carsTable = $this->getMockBuilder('\Classes\DatabaseTable')->getMock();
+        $carsTable = $this->createMock(DatabaseTable::class);
+
+        $this->controller = new Cars($this->carsTable, $this->manufacturersTable, $this->authentication, $this->images, [], $car);
 
     }
 

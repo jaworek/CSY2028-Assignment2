@@ -21,6 +21,8 @@ class LoginTest extends Testcase
             'login' => '',
             'password' => 'bob'
         ];
+
+
     }
 
     public function testEmptyPassword()

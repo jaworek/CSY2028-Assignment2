@@ -72,6 +72,7 @@ class Staff
         $errors = $this->validateStaff($this->post['staff']);
 
         if (count($errors) == 0) {
+            unset($this->post['staff']['password2']);
             $this->post['staff']['password'] = password_hash($this->post['staff']['password'], PASSWORD_DEFAULT);
             $this->adminsTable->save($this->post['staff']);
             header('Location: staff');

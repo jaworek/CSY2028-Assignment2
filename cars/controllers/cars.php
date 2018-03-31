@@ -55,7 +55,6 @@ class Cars
 
     public function showroom()
     {
-//        FIXME archived cars show on the page when they are filtered by manufacturer, also if all cars from specific manufacturer are archived option to filter is still present
         if (isset($this->get['id'])) {
             $cars2 = $this->carsTable->find('manufacturer_id', $this->get['id']);
             $cars = [];
@@ -174,7 +173,6 @@ class Cars
         header('Location: cars');
     }
 
-    //    Ask Tom if there is a way to remove number keys from array - can be fixed by using PDO::FETCH_COLUMN
     public function archive()
     {
         $car = $this->carsTable->find('id', $this->get['id'])[0];
